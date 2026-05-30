@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QR Code Generator — Create QR Codes Online Free | QuickDev</title>
+  <meta name="description" content="Free online QR code generator. Create QR codes for URLs, text, WiFi credentials, and more. Generated entirely in your browser — your data is private.">
+  <link rel="stylesheet" href="../css/style.css">
+  <style>#qrcode{display:flex;justify-content:center;padding:20px}
+    #qrcode canvas,#qrcode img{max-width:280px;border-radius:8px}
+</style>
+</head>
+<body>
+  <nav class="nav">
+    <div class="container">
+      <a href="../index.html" class="nav-logo">QuickDev</a>
+      <div class="nav-links">
+        <a href="json-formatter.html">JSON</a>
+        <a href="base64.html">Base64</a>
+        <a href="jwt-decoder.html">JWT</a>
+        <a href="qr-generator.html">QR</a>
+        <a href="sql-formatter.html">SQL</a>
+        <a href="regex-tester.html">Regex</a>
+        <a href="password-generator.html">Password</a>
+        <a href="markdown-preview.html">Markdown</a>
+        <a href="color-converter.html">Color</a>
+        <a href="diff-checker.html">Diff</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="main">
+    <div class="container">
+      <div class="main-header">
+        <h1 class="page-title">QR Code Generator</h1>
+        <p class="page-desc">Create QR codes for URLs, text, contact info, WiFi, or anything else. All generation happens in your browser — data stays private.</p>
+      </div>
+
+      <div style="max-width:600px;">
+        <label for="qr-input">Content to Encode</label>
+        <textarea id="qr-input" placeholder="Enter a URL, text, or any content..." style="min-height:80px;"></textarea>
+
+        <div class="tool-row mt-12">
+          <div>
+            <label for="qr-size">Size (px)</label>
+            <input type="number" id="qr-size" value="256" min="128" max="512" step="32" style="width:100px;">
+          </div>
+          <div>
+            <label for="qr-color">Color</label>
+            <input type="color" id="qr-color" value="#4ec9b0" style="width:60px;height:36px;">
+          </div>
+        </div>
+
+        <button class="btn btn-primary mt-12" onclick="generateQR()">Generate QR Code</button>
+        <button class="btn btn-sm btn-secondary mt-12" onclick="downloadQR()">Download PNG</button>
+      </div>
+
+      <div id="qrcode" class="mt-16"></div>
+
+      <div class="ad-placeholder">AdSense Ad Unit — 728x90 Leaderboard</div>
+
+      <div class="related-tools">
+        <h4>Related Tools</h4>
+        <a href="password-generator.html">Password Generator</a>
+        <a href="uuid-generator.html">UUID Generator</a>
+        <a href="base64.html">Base64 Encoder</a>
+        <a href="url-encoder.html">URL Encoder</a>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer"><div class="container"><p>QuickDev &mdash; All tools run locally in your browser.</p></div></footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+  <script>
+    function generateQR() {
+      const container = document.getElementById('qrcode');
+      container.innerHTML = '';
+      const text = document.getElementById('qr-input').value.trim();
+      if (!text) { container.innerHTML = '<span class="text-sm">Enter content above to generate QR code</span>'; return; }
+      const size = parseInt(document.getElementById('qr-size').value) || 256;
+      const color = document.getElementById('qr-color').value;
+      if (typeof QRCode !== 'undefined') {
+        new QRCode(container, { text, width: size, height: size, colorDark: color, colorLight: '#ffffff' });
+      } else {
+        container.innerHTML = '<div id="qr-fallback" style="width:'+size+'px;height:'+size+'px;display:flex;align-items:center;justify-content:center;background:var(--bg-light);border-radius:8px;color:#888;">Loading QR library…</div>';
+        setTimeout(generateQR, 500);
+      }
+    }
+
+    function downloadQR() {
+      const canvas = document.querySelector('#qrcode canvas');
+      if (!canvas) return;
+      const a = document.createElement('a');
+      a.href = canvas.toDataURL('image/png');
+      a.download = 'qr-code.png';
+      a.click();
+    }
+
+    document.getElementById('qr-input').value = 'https://quickdev.cc';
+    document.getElementById('qr-input').addEventListener('input', function(){clearTimeout(this._t);this._t=setTimeout(generateQR,400)});
+    setTimeout(generateQR, 300);
+  </script>
+</body>
+</html>
