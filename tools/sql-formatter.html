@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SQL Formatter — Beautify & Format SQL Online | QuickDev</title>
+  <meta name="description" content="Free online SQL formatter. Format, beautify and indent SQL queries. Supports MySQL, PostgreSQL, SQLite. Works entirely in your browser — your queries stay private.">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <nav class="nav">
+    <div class="container">
+      <a href="../index.html" class="nav-logo">QuickDev</a>
+      <div class="nav-links">
+        <a href="json-formatter.html">JSON</a>
+        <a href="base64.html">Base64</a>
+        <a href="jwt-decoder.html">JWT</a>
+        <a href="qr-generator.html">QR</a>
+        <a href="sql-formatter.html">SQL</a>
+        <a href="regex-tester.html">Regex</a>
+        <a href="password-generator.html">Password</a>
+        <a href="markdown-preview.html">Markdown</a>
+        <a href="color-converter.html">Color</a>
+        <a href="diff-checker.html">Diff</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="main">
+    <div class="container">
+      <div class="main-header">
+        <h1 class="page-title">SQL Formatter</h1>
+        <p class="page-desc">Format and beautify SQL queries. Supports MySQL, PostgreSQL, SQLite, and standard SQL. All formatting happens in your browser.</p>
+      </div>
+
+      <label for="sql-input">Input SQL</label>
+      <textarea id="sql-input" placeholder='Paste your SQL here… e.g. SELECT id,name,email FROM users WHERE active=1 ORDER BY name'></textarea>
+
+      <div class="btn-group">
+        <button class="btn btn-primary" onclick="formatSQL()">Format</button>
+        <button class="btn btn-secondary" onclick="formatCompact()">Compact</button>
+        <button class="btn btn-danger btn-sm" onclick="clearAll()">Clear</button>
+      </div>
+
+      <div id="error" class="error-msg" style="display:none"></div>
+
+      <div class="mt-16 flex-between">
+        <label style="margin:0">Formatted SQL</label>
+        <button class="btn btn-sm btn-secondary" onclick="copySQL()">Copy</button>
+      </div>
+      <pre id="sql-output" class="result-area" style="min-height:150px;max-height:500px;overflow:auto;"></pre>
+
+      <style>#sql-output .kw{color:#569cd6}#sql-output .fn{color:#dcdcaa}#sql-output .str{color:#ce9178}#sql-output .num{color:#b5cea8}#sql-output .cmt{color:#6a9955}</style>
+
+      <div class="ad-placeholder">AdSense Ad Unit — 728x90 Leaderboard</div>
+
+      <div class="related-tools">
+        <h4>Related Tools</h4>
+        <a href="json-formatter.html">JSON Formatter</a>
+        <a href="diff-checker.html">Diff Checker</a>
+        <a href="regex-tester.html">Regex Tester</a>
+        <a href="jwt-decoder.html">JWT Decoder</a>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer"><div class="container"><p>QuickDev &mdash; All tools run locally in your browser.</p></div></footer>
+
+  <div id="toast" class="toast"></div>
+
+  <script>
+    const input = document.getElementById('sql-input');
+    const output = document.getElementById('sql-output');
+    const errorEl = document.getElementById('error');
+    const toast = document.getElementById('toast');
+
+    const KEYWORDS = /\b(SELECT|FROM|WHERE|AND|OR|NOT|IN|EXISTS|BETWEEN|LIKE|IS|NULL|TRUE|FALSE|INSERT|INTO|VALUES|UPDATE|SET|DELETE|CREATE|TABLE|ALTER|ADD|DROP|INDEX|VIEW|JOIN|LEFT|RIGHT|INNER|OUTER|FULL|CROSS|ON|AS|ORDER|BY|GROUP|HAVING|LIMIT|OFFSET|UNION|ALL|DISTINCT|CASE|WHEN|THEN|ELSE|END|ASC|DESC|PRIMARY|KEY|FOREIGN|REFERENCES|CONSTRAINT|UNIQUE|CHECK|DEFAULT|WITH|RECURSIVE)\b/gi;
+    const KEYWORDS_MINI = /\b(SELECT|FROM|WHERE|AND|OR|ORDER BY|GROUP BY|INNER JOIN|LEFT JOIN|RIGHT JOIN|ON|SET|INSERT INTO|CREATE TABLE|ALTER TABLE|DROP)\b/gi;
+
+    function formatSQL() {
+      errorEl.style.display = 'none';
+      let sql = input.value.trim();
+      if (!sql) { output.textContent = ''; return; }
+
+      // Basic SQL formatting
+      sql = sql.replace(/\s+/g, ' ').trim();
+
+      // Line breaks before major keywords
+      ['SELECT', 'FROM', 'WHERE', 'AND', 'OR', 'ORDER BY', 'GROUP BY', 'HAVING', 'LIMIT', 'OFFSET',
+       'INNER JOIN', 'LEFT JOIN', 'RIGHT JOIN', 'FULL JOIN', 'CROSS JOIN', 'ON', 'SET', 'VALUES',
+       'INSERT INTO', 'UPDATE', 'DELETE FROM', 'CREATE TABLE', 'ALTER TABLE', 'DROP', 'UNION', 'EXCEPT', 'INTERSECT'].forEach(kw => {
+        const re = new RegExp('\\b' + kw.replace(/ /g, '\\s+') + '\\b', 'gi');
+        sql = sql.replace(re, '\n' + kw.toUpperCase());
+      });
+
+      // Indent
+      const lines = sql.split('\n');
+      let formatted = '', indent = 0;
+      for (let line of lines) {
+        line = line.trim();
+        if (!line) continue;
+        if (/^(FROM|WHERE|AND|OR|ORDER BY|GROUP BY|HAVING|LIMIT|OFFSET|SET|ON|INNER JOIN|LEFT JOIN|RIGHT JOIN)/i.test(line)) indent = 1;
+        if (/^(SELECT|INSERT INTO|UPDATE|DELETE FROM|CREATE|ALTER|DROP)/i.test(line)) indent = 0;
+        formatted += '  '.repeat(indent) + line + '\n';
+      }
+
+      output.textContent = formatted;
+    }
+
+    function formatCompact() {
+      errorEl.style.display = 'none';
+      let sql = input.value.trim();
+      if (!sql) { output.textContent = ''; return; }
+      sql = sql.replace(/\s+/g, ' ').trim();
+      output.textContent = sql;
+    }
+
+    function clearAll() { input.value = ''; output.textContent = ''; errorEl.style.display = 'none'; }
+
+    function copySQL() {
+      if (!output.textContent) return;
+      navigator.clipboard.writeText(output.textContent);
+      toast.textContent = 'Copied!'; toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 1500);
+    }
+
+    // Sample
+    input.value = 'select u.id, u.name, o.total from users u inner join orders o on u.id = o.user_id where u.active = 1 and o.total > 100 order by o.total desc limit 10';
+    formatSQL();
+  </script>
+</body>
+</html>
