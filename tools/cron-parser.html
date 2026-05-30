@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="QuickDev">
+  <meta property="og:title" content="Cron Expression Parser">
+  <meta property="og:description" content="Parse, explain, and generate cron expressions. See next run times. Works entirely in your browser.">
+  <meta property="og:url" content="https://quickdev.cc/tools/cron-parser.html">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Cron Expression Parser">
+  <meta name="twitter:description" content="Parse, explain, and generate cron expressions. See next run times.">
+  <title>Cron Expression Parser — Cron Schedule to Human Text | QuickDev</title>
+  <meta name="description" content="Free online cron expression parser. Convert cron schedules to human-readable text and see next execution times. Works entirely in your browser.">
+  <link rel="stylesheet" href="../css/style.css">
+  <style>.field{display:inline-block;width:80px;text-align:center;font-family:var(--font-mono);font-size:0.85rem;padding:6px 8px;background:var(--bg);border:1px solid var(--border);border-radius:4px;margin:2px}
+    .field.active{border-color:var(--accent);color:var(--accent)}
+    .schedule{display:flex;flex-wrap:wrap;gap:4px;align-items:center;margin:12px 0}
+    .next-run{font-family:var(--font-mono);padding:8px 12px;background:rgba(78,201,176,0.08);border-radius:var(--radius);margin:4px 0}
+  </style>
+<script type="text/javascript">(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window,document,"clarity","script","wz6rbq9kj8");</script>
+</head>
+<body>
+  <nav class="nav"><div class="container">
+    <a href="../index.html" class="nav-logo">QuickDev</a>
+    <div class="nav-links">
+      <a href="json-formatter.html">JSON</a><a href="base64.html">Base64</a><a href="jwt-decoder.html">JWT</a>
+      <a href="qr-generator.html">QR</a><a href="sql-formatter.html">SQL</a><a href="cron-parser.html">Cron</a>
+      <a href="regex-tester.html">Regex</a><a href="csv-json.html">CSV</a>
+      <a href="html-entity.html">HTML</a><a href="minifier.html">Minify</a><a href="diff-checker.html">Diff</a><a href="http-status.html">HTTP</a>
+    </div>
+  </div></nav>
+
+  <main class="main"><div class="container">
+    <div class="main-header">
+      <h1 class="page-title">Cron Expression Parser</h1>
+      <p class="page-desc">Parse cron expressions, see human-readable explanations, and preview upcoming execution times.</p>
+    </div>
+
+    <label for="cron-input">Cron Expression</label>
+    <input type="text" id="cron-input" placeholder="*/15 6-18 * * 1-5" value="*/15 6-18 * * 1-5" oninput="parseCron()">
+
+    <div class="schedule" id="fields"></div>
+    <div id="explanation" class="text-sm mt-12" style="background:var(--bg-card);padding:12px;border-radius:var(--radius)"></div>
+
+    <div class="mt-16">
+      <label>Next 5 Execution Times (local time)</label>
+      <div id="next-runs"></div>
+    </div>
+
+    <div class="mt-12 text-sm" style="color:#888">
+      <strong>Quick Reference:</strong><br>
+      <code>* * * * *</code> = every minute &nbsp;|&nbsp;
+      <code>0 * * * *</code> = every hour &nbsp;|&nbsp;
+      <code>0 0 * * *</code> = daily midnight &nbsp;|&nbsp;
+      <code>0 9 * * 1-5</code> = weekdays 9am &nbsp;|&nbsp;
+      <code>*/30 * * * *</code> = every 30 mins
+    </div>
+
+    <div class="ad-placeholder">AdSense Ad Unit</div>
+    <div class="related-tools">
+      <h4>Related Tools</h4>
+      <a href="timestamp.html">Timestamp Converter</a><a href="regex-tester.html">Regex Tester</a>
+      <a href="json-formatter.html">JSON Formatter</a><a href="uuid-generator.html">UUID Generator</a>
+    </div>
+  </div></main>
+  <footer class="footer"><div class="container"><p>QuickDev — All tools run locally in your browser.</p></div></footer>
+
+  <script>
+    const NAMES = ['minute','hour','day of month','month','day of week'];
+    const NAMES_CN = ['Minute (0-59)','Hour (0-23)','Day of Month (1-31)','Month (1-12)','Day of Week (0-7, 0=Sun)'];
+
+    function parseField(f, min, max, aliases) {
+      if (f === '*' || f === '?') return { values: Array.from({length: max-min+1}, (_,i) => i+min), desc: 'every' };
+      const parts = f.split(',');
+      let values = [], descs = [];
+      for (let p of parts) {
+        if (p.includes('/')) {
+          const [range, step] = p.split('/');
+          const sv = parseInt(step);
+          let start = min, end = max;
+          if (range !== '*') { [start, end] = range.split('-').map(Number); }
+          for (let i = start; i <= end; i += sv) values.push(i);
+          descs.push('every ' + sv + suffix(sv) + (range !== '*' ? ' from ' + start + ' to ' + end : ''));
+        } else if (p.includes('-')) {
+          const [s, e] = p.split('-').map(Number);
+          for (let i = s; i <= e; i++) values.push(i);
+          descs.push(s + ' through ' + e);
+        } else {
+          values.push(parseInt(p));
+          descs.push(aliases ? (aliases[p] || String(p)) : String(p));
+        }
+      }
+      return { values, desc: descs.join(', ') };
+    }
+
+    function suffix(n) { const s = String(n); return s.endsWith('1')&&s!=='11'?'st':s.endsWith('2')&&s!=='12'?'nd':s.endsWith('3')&&s!=='13'?'rd':'th'; }
+
+    function describeMonth(m) { const months=['','Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']; return months[m]||String(m); }
+    function describeDow(d) { const days=['Sun','Mon','Tue','Wed','Thu','Fri','Sat']; return days[d]||String(d); }
+
+    function parseCron() {
+      const input = document.getElementById('cron-input').value.trim();
+      const parts = input.split(/\s+/);
+      const fieldsEl = document.getElementById('fields');
+      const explainEl = document.getElementById('explanation');
+      const nextEl = document.getElementById('next-runs');
+      fieldsEl.innerHTML = ''; explainEl.innerHTML = ''; nextEl.innerHTML = '';
+
+      if (parts.length !== 5) {
+        explainEl.innerHTML = '<span style="color:var(--danger)">Enter exactly 5 parts separated by spaces.</span>';
+        return;
+      }
+
+      const ranges = [[0,59],[0,23],[1,31],[1,12],[0,7]];
+      const parsers = [
+        (f) => parseField(f,0,59),
+        (f) => parseField(f,0,23),
+        (f) => parseField(f,1,31),
+        (f) => parseField(f,1,12, null),
+        (f) => parseField(f,0,7, null),
+      ];
+      const describes = [(v)=>v, (v)=>v, (v)=>v, describeMonth, describeDow];
+
+      const parsed = parts.map((p,i) => parsers[i](p));
+
+      // Show field visualization
+      parts.forEach((p,i) => {
+        const span = document.createElement('span');
+        span.className = 'field active';
+        span.textContent = p;
+        span.title = NAMES_CN[i];
+        fieldsEl.appendChild(span);
+        if (i < 4) fieldsEl.appendChild(document.createTextNode(' '));
+      });
+
+      // Human explanation
+      const minDesc = parsed[0].desc.replace('every','every minute');
+      const hrDesc = parsed[1].desc.replace('every','every hour');
+      const domDesc = parsed[2].desc.replace('every','every day');
+      const monDesc = parsed[3].desc.replace('every','every month');
+      const dowDesc = parsed[4].desc.replace('every','every day-of-week');
+
+      let desc = '';
+      if (parts[0]==='*' && parts[1]==='*' && parts[2]==='*' && parts[3]==='*' && parts[4]==='*') desc = 'Runs every minute.';
+      else if (parts[0]!=='*' && parts.every((p,i)=> i===0 || p==='*' || p==='?')) desc = 'Runs at minute ' + minDesc + ' of every hour, every day.';
+      else if (parts[1]!=='*' && parts[0]==='0') desc = 'Runs at ' + hrDesc + ' o\'clock' + (parts[0]!=='0'?' minute '+minDesc:'') + ', every day.';
+      else desc = 'Minute: ' + minDesc + ', Hour: ' + hrDesc + ', Day: ' + domDesc + ', Month: ' + monDesc + ', Day of week: ' + dowDesc + '.';
+
+      explainEl.innerHTML = '<strong style="color:var(--accent)">📅</strong> ' + desc;
+
+      // Next 5 runs
+      try { showNextRuns(parts, parsed); } catch(e) { nextEl.innerHTML = '<span class="text-sm">Unable to compute next runs.</span>'; }
+    }
+
+    function showNextRuns(parts, parsed) {
+      const now = new Date();
+      now.setSeconds(0, 0);
+      const runs = [];
+      let cursor = new Date(now);
+      cursor.setMinutes(cursor.getMinutes() + 1);
+      const maxIter = 60 * 24 * 365; // 1 year max
+      let iter = 0;
+
+      while (runs.length < 5 && iter < maxIter) {
+        iter++;
+        if (matches(cursor, parsed)) runs.push(new Date(cursor));
+        cursor.setMinutes(cursor.getMinutes() + 1);
+      }
+
+      const nextEl = document.getElementById('next-runs');
+      if (runs.length === 0) {
+        nextEl.innerHTML = '<span class="text-sm">No upcoming runs found in the next year.</span>';
+        return;
+      }
+      nextEl.innerHTML = runs.map(r => '<div class="next-run">' + r.toLocaleString('en-US', {weekday:'short',year:'numeric',month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}) + '</div>').join('');
+    }
+
+    function matches(date, parsed) {
+      const vals = [date.getMinutes(), date.getHours(), date.getDate(), date.getMonth()+1, date.getDay()];
+      return parsed.every((p,i) => p.values.includes(vals[i]));
+    }
+
+    parseCron();
+  </script>
+</body>
+</html>
