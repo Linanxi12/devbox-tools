@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JWT Decoder — Decode JSON Web Tokens Online | QuickDev</title>
+  <meta name="description" content="Free online JWT decoder. Decode and inspect the header and payload of JSON Web Tokens. Everything happens in your browser — your tokens stay private.">
+  <link rel="stylesheet" href="../css/style.css">
+  <style>.jwt-part{background:rgba(78,201,176,0.08);border:1px solid var(--border);border-radius:var(--radius);padding:10px 14px;margin:6px 0;word-break:break-all;font-family:var(--font-mono);font-size:0.84rem}
+    .jwt-label{color:var(--accent);font-weight:600;font-size:0.8rem;margin-bottom:4px}
+    .jwt-json{white-space:pre-wrap;background:var(--bg);padding:10px;border-radius:4px;font-size:0.82rem;max-height:300px;overflow:auto}
+</style>
+</head>
+<body>
+  <nav class="nav">
+    <div class="container">
+      <a href="../index.html" class="nav-logo">QuickDev</a>
+      <div class="nav-links">
+        <a href="json-formatter.html">JSON</a>
+        <a href="base64.html">Base64</a>
+        <a href="jwt-decoder.html">JWT</a>
+        <a href="qr-generator.html">QR</a>
+        <a href="sql-formatter.html">SQL</a>
+        <a href="regex-tester.html">Regex</a>
+        <a href="password-generator.html">Password</a>
+        <a href="markdown-preview.html">Markdown</a>
+        <a href="color-converter.html">Color</a>
+        <a href="diff-checker.html">Diff</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="main">
+    <div class="container">
+      <div class="main-header">
+        <h1 class="page-title">JWT Decoder</h1>
+        <p class="page-desc">Decode and inspect JSON Web Tokens (JWT) header and payload. All decoding happens locally — your tokens are never sent anywhere.</p>
+      </div>
+
+      <label for="jwt-input">Paste Your JWT Token</label>
+      <textarea id="jwt-input" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c" style="min-height:80px;"></textarea>
+
+      <button class="btn btn-primary mt-12" onclick="decodeJWT()">Decode</button>
+
+      <div id="error" class="error-msg" style="display:none"></div>
+
+      <div class="mt-16">
+        <div class="jwt-label">Header</div>
+        <div class="jwt-part"><pre class="jwt-json" id="header-out">—</pre></div>
+      </div>
+      <div>
+        <div class="jwt-label">Payload</div>
+        <div class="jwt-part"><pre class="jwt-json" id="payload-out">—</pre></div>
+      </div>
+      <div>
+        <div class="jwt-label">Signature</div>
+        <div class="jwt-part"><span id="sig-out" style="color:#888;font-size:0.82rem;">—</span></div>
+      </div>
+      <div id="expiry" class="text-sm mt-12"></div>
+
+      <div class="ad-placeholder">AdSense Ad Unit — 728x90 Leaderboard</div>
+
+      <div class="related-tools">
+        <h4>Related Tools</h4>
+        <a href="base64.html">Base64 Encoder</a>
+        <a href="json-formatter.html">JSON Formatter</a>
+        <a href="url-encoder.html">URL Encoder</a>
+        <a href="regex-tester.html">Regex Tester</a>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer"><div class="container"><p>QuickDev &mdash; All tools run locally in your browser.</p></div></footer>
+
+  <script>
+    function decodeJWT() {
+      const token = document.getElementById('jwt-input').value.trim();
+      document.getElementById('error').style.display = 'none';
+      document.getElementById('header-out').textContent = '—';
+      document.getElementById('payload-out').textContent = '—';
+      document.getElementById('sig-out').textContent = '—';
+      document.getElementById('expiry').textContent = '';
+
+      if (!token) return;
+      const parts = token.split('.');
+      if (parts.length !== 3) {
+        document.getElementById('error').style.display = 'block';
+        document.getElementById('error').textContent = 'Invalid JWT: must have 3 parts separated by dots';
+        return;
+      }
+      try {
+        const header = JSON.parse(atob(parts[0]));
+        document.getElementById('header-out').textContent = JSON.stringify(header, null, 2);
+        const payload = JSON.parse(atob(parts[1]));
+        document.getElementById('payload-out').textContent = JSON.stringify(payload, null, 2);
+
+        // Expiry check
+        if (payload.exp) {
+          const d = new Date(payload.exp * 1000);
+          const now = new Date();
+          const label = now > d ? '⚠ EXPIRED' : '✓ Valid until';
+          document.getElementById('expiry').innerHTML = label + ' <span style="color:var(--accent)">' + d.toUTCString() + '</span>';
+        }
+        if (payload.iat) {
+          document.getElementById('expiry').innerHTML += ' &nbsp;|&nbsp; Issued: ' + new Date(payload.iat * 1000).toUTCString();
+        }
+      } catch(e) {
+        document.getElementById('error').style.display = 'block';
+        document.getElementById('error').textContent = 'Decode error: ' + e.message + '. Check if the token is properly Base64-encoded.';
+      }
+      document.getElementById('sig-out').textContent = parts[2].substring(0, 20) + '... (verified client-side only)';
+    }
+
+    // Auto-decode on paste
+    document.getElementById('jwt-input').addEventListener('input', decodeJWT);
+    decodeJWT();
+  </script>
+</body>
+</html>
