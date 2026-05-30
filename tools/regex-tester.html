@@ -104,7 +104,6 @@
 
       try {
         const re = new RegExp(patternEl.value, flagsEl.value);
-        let html = escapeHtml(text);
 
         // Find all matches
         const matches = [];
@@ -119,12 +118,14 @@
           if (m) matches.push({ index: m.index, text: m[0], groups: m.slice(1) });
         }
 
-        // Highlight (from end to start to preserve indices)
-        for (let i = matches.length - 1; i >= 0; i--) {
-          const { index, text: t } = matches[i];
-          const escaped = escapeHtml(t);
-          html = html.slice(0, index) + '<span class="match">' + escaped + '</span>' + html.slice(index + t.length);
+        // Build highlighted HTML — handle each segment to preserve escape correctness
+        let html = '', lastEnd = 0;
+        for (const match of matches) {
+          html += escapeHtml(text.slice(lastEnd, match.index));
+          html += '<span class="match">' + escapeHtml(match.text) + '</span>';
+          lastEnd = match.index + match.text.length;
         }
+        html += escapeHtml(text.slice(lastEnd));
 
         highlight.innerHTML = html || escapeHtml(text);
         matchCount.textContent = matches.length + ' match' + (matches.length !== 1 ? 'es' : '');
