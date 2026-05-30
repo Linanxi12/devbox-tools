@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <meta property="og:type" content="website"><meta property="og:site_name" content="QuickDev">
+  <meta property="og:title" content="HTTP Status Code Reference"><meta property="og:url" content="https://quickdev.cc/tools/http-status.html">
+  <meta property="og:description" content="Quick reference for all HTTP status codes with descriptions. Search and filter by category.">
+  <meta name="twitter:card" content="summary"><meta name="twitter:title" content="HTTP Status Code Reference">
+  <title>HTTP Status Code Reference — All HTTP Status Codes | QuickDev</title>
+  <meta name="description" content="Complete HTTP status code reference. Browse 1xx, 2xx, 3xx, 4xx, 5xx codes with descriptions. Search and filter. Works offline.">
+  <link rel="stylesheet" href="../css/style.css">
+  <style>.code-row{display:flex;align-items:baseline;gap:12px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.04)}
+    .code-num{min-width:48px;font-family:var(--font-mono);font-weight:600;font-size:0.9rem}
+    .code-msg{font-weight:600;min-width:200px;font-size:0.85rem}
+    .code-desc{color:#888;font-size:0.82rem}
+    .s1xx{color:#61afef}.s2xx{color:#98c379}.s3xx{color:#dcdcaa}.s4xx{color:#e5c07b}.s5xx{color:#e06c75}
+    input[type="search"]{margin-bottom:16px}</style>
+<script type="text/javascript">(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window,document,"clarity","script","wz6rbq9kj8");</script>
+</head>
+<body>
+  <nav class="nav"><div class="container">
+    <a href="../index.html" class="nav-logo">QuickDev</a>
+    <div class="nav-links">
+      <a href="json-formatter.html">JSON</a><a href="base64.html">Base64</a><a href="jwt-decoder.html">JWT</a>
+      <a href="qr-generator.html">QR</a><a href="sql-formatter.html">SQL</a><a href="cron-parser.html">Cron</a>
+      <a href="regex-tester.html">Regex</a><a href="csv-json.html">CSV</a>
+      <a href="html-entity.html">HTML</a><a href="minifier.html">Minify</a><a href="diff-checker.html">Diff</a><a href="http-status.html">HTTP</a>
+    </div>
+  </div></nav>
+
+  <main class="main"><div class="container">
+    <div class="main-header">
+      <h1 class="page-title">HTTP Status Code Reference</h1>
+      <p class="page-desc">Complete reference of all HTTP status codes. Search, filter, and bookmark for quick access.</p>
+    </div>
+
+    <input type="search" id="search" placeholder="Search by code or description... (e.g. 404, not found, server)" oninput="filterCodes()">
+
+    <div class="btn-group" style="margin-bottom:12px;">
+      <button class="btn btn-sm btn-secondary" onclick="filterCodes()">All</button>
+      <button class="btn btn-sm btn-secondary" onclick="document.getElementById('search').value='200';filterCodes()">2xx</button>
+      <button class="btn btn-sm btn-secondary" onclick="document.getElementById('search').value='301';filterCodes()">3xx</button>
+      <button class="btn btn-sm btn-secondary" onclick="document.getElementById('search').value='404';filterCodes()">4xx</button>
+      <button class="btn btn-sm btn-secondary" onclick="document.getElementById('search').value='500';filterCodes()">5xx</button>
+    </div>
+
+    <div id="code-list"></div>
+  </div></main>
+  <footer class="footer"><div class="container"><p>QuickDev — All tools run locally in your browser.</p></div></footer>
+
+  <script>
+    const CODES = [
+      [100,'Continue','Server received initial request, client should continue.'],[101,'Switching Protocols','Server switching protocols as requested.'],[103,'Early Hints','Used with Link header for preloading.'],
+      [200,'OK','Request succeeded.'],[201,'Created','New resource created.'],[202,'Accepted','Request accepted but processing not complete.'],[204,'No Content','Success but no body returned.'],[206,'Partial Content','Response contains partial data (range requests).'],
+      [300,'Multiple Choices','Multiple possible responses.'],[301,'Moved Permanently','Resource permanently moved to new URL.'],[302,'Found','Temporary redirect.'],[304,'Not Modified','Resource unchanged (caching).'],[307,'Temporary Redirect','Repeat request to new URL.'],[308,'Permanent Redirect','Permanently moved, repeat to new URL.'],
+      [400,'Bad Request','Server cannot understand request.'],[401,'Unauthorized','Authentication required.'],[403,'Forbidden','Server refuses to fulfill.'],[404,'Not Found','Resource not found.'],[405,'Method Not Allowed','HTTP method not supported.'],[408,'Request Timeout','Server timed out waiting.'],[409,'Conflict','Request conflicts with current state.'],[410,'Gone','Resource permanently deleted.'],[413,'Payload Too Large','Request body too large.'],[414,'URI Too Long','URL too long.'],[415,'Unsupported Media Type','Media format not supported.'],[422,'Unprocessable Entity','Semantic errors in request.'],[429,'Too Many Requests','Rate limit exceeded.'],
+      [500,'Internal Server Error','Generic server error.'],[501,'Not Implemented','Server does not support function.'],[502,'Bad Gateway','Invalid upstream response.'],[503,'Service Unavailable','Server temporarily overloaded or down.'],[504,'Gateway Timeout','Upstream server timed out.']
+    ];
+
+    function filterCodes() {
+      const q = (document.getElementById('search').value || '').toLowerCase();
+      const list = document.getElementById('code-list');
+      let filtered = CODES;
+      if (q && q !== 'all') {
+        filtered = CODES.filter(c => String(c[0]).includes(q) || c[1].toLowerCase().includes(q) || c[2].toLowerCase().includes(q));
+      }
+      list.innerHTML = filtered.map(c => {
+        const cls = 's' + String(c[0]).charAt(0) + 'xx';
+        return '<div class="code-row"><span class="code-num ' + cls + '">' + c[0] + '</span><span class="code-msg">' + c[1] + '</span><span class="code-desc">' + c[2] + '</span></div>';
+      }).join('');
+    }
+
+    filterCodes();
+  </script>
+</body>
+</html>
