@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <meta property="og:type" content="website"><meta property="og:site_name" content="QuickDev">
+  <meta property="og:title" content="CSV to JSON Converter"><meta property="og:url" content="https://quickdev.cc/tools/csv-json.html">
+  <meta property="og:description" content="Convert CSV data to JSON and JSON to CSV. Works entirely in your browser.">
+  <meta name="twitter:card" content="summary"><meta name="twitter:title" content="CSV to JSON Converter">
+  <title>CSV to JSON Converter — Convert CSV ↔ JSON Online | QuickDev</title>
+  <meta name="description" content="Free online CSV to JSON converter. Convert CSV to JSON and JSON to CSV. Supports custom delimiters. Works entirely in your browser.">
+  <link rel="stylesheet" href="../css/style.css">
+<script type="text/javascript">(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window,document,"clarity","script","wz6rbq9kj8");</script>
+</head>
+<body>
+  <nav class="nav"><div class="container">
+    <a href="../index.html" class="nav-logo">QuickDev</a>
+    <div class="nav-links">
+      <a href="json-formatter.html">JSON</a><a href="base64.html">Base64</a><a href="jwt-decoder.html">JWT</a>
+      <a href="qr-generator.html">QR</a><a href="sql-formatter.html">SQL</a><a href="cron-parser.html">Cron</a>
+      <a href="regex-tester.html">Regex</a><a href="csv-json.html">CSV</a>
+      <a href="html-entity.html">HTML</a><a href="minifier.html">Minify</a><a href="diff-checker.html">Diff</a><a href="http-status.html">HTTP</a>
+    </div>
+  </div></nav>
+
+  <main class="main"><div class="container">
+    <div class="main-header">
+      <h1 class="page-title">CSV ↔ JSON Converter</h1>
+      <p class="page-desc">Convert CSV data to JSON or JSON back to CSV. All processing happens locally in your browser.</p>
+    </div>
+
+    <label for="csv-input">CSV Input</label>
+    <textarea id="csv-input" placeholder="Paste CSV data here..."></textarea>
+    <div class="btn-group">
+      <button class="btn btn-primary" onclick="csvToJson()">CSV → JSON</button>
+      <button class="btn btn-secondary" onclick="jsonToCsv()">JSON → CSV</button>
+      <button class="btn btn-secondary" id="copyBtn" onclick="copyOutput()">Copy Result</button>
+      <button class="btn btn-danger btn-sm" onclick="clearAll()">Clear</button>
+    </div>
+
+    <div id="error" class="error-msg" style="display:none"></div>
+
+    <div class="mt-16"><label>Output</label></div>
+    <div id="output" class="result-area" style="min-height:150px;max-height:400px;overflow:auto;"></div>
+
+    <div class="text-xs mt-12">
+      <strong>CSV → JSON tips:</strong> First line treated as headers. Supports comma, tab, and semicolon delimiters. Empty values convert to null.
+    </div>
+
+    <div class="ad-placeholder">AdSense Ad Unit</div>
+    <div class="related-tools">
+      <h4>Related Tools</h4>
+      <a href="json-formatter.html">JSON Formatter</a><a href="base64.html">Base64 Encoder</a>
+      <a href="sql-formatter.html">SQL Formatter</a><a href="diff-checker.html">Diff Checker</a>
+    </div>
+  </div></main>
+  <footer class="footer"><div class="container"><p>QuickDev — All tools run locally in your browser.</p></div></footer>
+  <div id="toast" class="toast"></div>
+
+  <script>
+    const csvInput = document.getElementById('csv-input');
+    const output = document.getElementById('output');
+    const errorEl = document.getElementById('error');
+    const toast = document.getElementById('toast');
+
+    function detectDelimiter(line) {
+      if (line.includes('\t')) return '\t';
+      if (line.includes(';')) return ';';
+      return ',';
+    }
+
+    function csvToJson() {
+      errorEl.style.display = 'none';
+      const text = csvInput.value.trim();
+      if (!text) { output.textContent = ''; return; }
+      try {
+        const lines = text.split('\n').filter(l => l.trim());
+        const delim = detectDelimiter(lines[0]);
+        const headers = parseLine(lines[0], delim);
+        const rows = [];
+        for (let i = 1; i < lines.length; i++) {
+          const vals = parseLine(lines[i], delim);
+          const obj = {};
+          headers.forEach((h, j) => obj[h] = vals[j] === '' ? null : isNaN(vals[j]) ? vals[j] : Number(vals[j]));
+          rows.push(obj);
+        }
+        output.textContent = JSON.stringify(rows, null, 2);
+      } catch(e) {
+        errorEl.style.display = 'block';
+        errorEl.textContent = 'Error: ' + e.message;
+      }
+    }
+
+    function jsonToCsv() {
+      errorEl.style.display = 'none';
+      try {
+        const data = JSON.parse(csvInput.value.trim() || '[]');
+        const arr = Array.isArray(data) ? data : [data];
+        if (arr.length === 0) { output.textContent = ''; return; }
+        const headers = Object.keys(arr[0]);
+        const lines = [headers.join(',')];
+        arr.forEach(row => {
+          lines.push(headers.map(h => {
+            const v = row[h];
+            if (v === null || v === undefined) return '';
+            if (typeof v === 'string' && (v.includes(',') || v.includes('"') || v.includes('\n')))
+              return '"' + v.replace(/"/g, '""') + '"';
+            return String(v);
+          }).join(','));
+        });
+        output.textContent = lines.join('\n');
+      } catch(e) {
+        errorEl.style.display = 'block';
+        errorEl.textContent = 'Invalid JSON: ' + e.message;
+      }
+    }
+
+    function parseLine(line, delim) {
+      const result = [];
+      let current = '', inQuotes = false;
+      for (let i = 0; i < line.length; i++) {
+        if (inQuotes && line[i] === '"') {
+          if (line[i+1] === '"') { current += '"'; i++; }
+          else inQuotes = false;
+        } else if (line[i] === '"') { inQuotes = true; }
+        else if (line[i] === delim && !inQuotes) { result.push(current.trim()); current = ''; }
+        else current += line[i];
+      }
+      result.push(current.trim());
+      return result;
+    }
+
+    function copyOutput() {
+      if (!output.textContent) return;
+      navigator.clipboard.writeText(output.textContent);
+      toast.textContent = 'Copied!'; toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 1500);
+    }
+
+    function clearAll() { csvInput.value = ''; output.textContent = ''; errorEl.style.display = 'none'; }
+
+    csvInput.value = 'name,age,city\nAlice,28,New York\nBob,32,San Francisco\nCarol,25,Chicago';
+    csvToJson();
+  </script>
+</body>
+</html>
