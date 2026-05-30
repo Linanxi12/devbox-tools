@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <meta property="og:type" content="website"><meta property="og:site_name" content="QuickDev">
+  <meta property="og:title" content="HTML Entity Encoder / Decoder">
+  <meta property="og:url" content="https://quickdev.cc/tools/html-entity.html">
+  <meta property="og:description" content="Encode and decode HTML entities. Convert special characters to HTML-safe format and back.">
+  <meta name="twitter:card" content="summary"><meta name="twitter:title" content="HTML Entity Encoder / Decoder">
+  <title>HTML Entity Encoder / Decoder — Escape HTML Online | QuickDev</title>
+  <meta name="description" content="Free online HTML entity encoder and decoder. Convert special characters like < > & to HTML-safe entities and decode them back. Works in your browser.">
+  <link rel="stylesheet" href="../css/style.css">
+<script type="text/javascript">(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window,document,"clarity","script","wz6rbq9kj8");</script>
+</head>
+<body>
+  <nav class="nav"><div class="container">
+    <a href="../index.html" class="nav-logo">QuickDev</a>
+    <div class="nav-links">
+      <a href="json-formatter.html">JSON</a><a href="base64.html">Base64</a><a href="jwt-decoder.html">JWT</a>
+      <a href="qr-generator.html">QR</a><a href="sql-formatter.html">SQL</a><a href="cron-parser.html">Cron</a>
+      <a href="regex-tester.html">Regex</a><a href="csv-json.html">CSV</a>
+      <a href="html-entity.html">HTML</a><a href="minifier.html">Minify</a><a href="diff-checker.html">Diff</a><a href="http-status.html">HTTP</a>
+    </div>
+  </div></nav>
+
+  <main class="main"><div class="container">
+    <div class="main-header">
+      <h1 class="page-title">HTML Entity Encoder / Decoder</h1>
+      <p class="page-desc">Convert HTML special characters to entities and decode them back. All processing in your browser.</p>
+    </div>
+
+    <label for="input">Input</label>
+    <textarea id="input" placeholder="Enter text or HTML entities..."></textarea>
+
+    <div class="btn-group">
+      <button class="btn btn-primary" onclick="doEncode()">Encode (&lt; → &amp;lt;)</button>
+      <button class="btn btn-secondary" onclick="doDecode()">Decode (&amp;lt; → &lt;)</button>
+      <button class="btn btn-secondary" onclick="swapIO()">Swap</button>
+      <button class="btn btn-danger btn-sm" onclick="clearAll()">Clear</button>
+    </div>
+
+    <div class="mt-16 flex-between">
+      <label style="margin:0">Output</label>
+      <button class="btn btn-sm btn-secondary" onclick="copyOutput()">Copy</button>
+    </div>
+    <div id="output" class="result-area" style="min-height:100px;max-height:400px;overflow:auto;"></div>
+
+    <div class="text-xs mt-12" style="color:#888">
+      <strong>Quick reference:</strong> &amp;amp; = &amp; &nbsp; &amp;lt; = &lt; &nbsp; &amp;gt; = &gt; &nbsp; &amp;quot; = &quot; &nbsp; &amp;#39; = &apos;
+    </div>
+
+    <div class="ad-placeholder">AdSense Ad Unit</div>
+    <div class="related-tools">
+      <h4>Related Tools</h4>
+      <a href="url-encoder.html">URL Encoder</a><a href="base64.html">Base64 Encoder</a>
+      <a href="minifier.html">Code Minifier</a><a href="json-formatter.html">JSON Formatter</a>
+    </div>
+  </div></main>
+  <footer class="footer"><div class="container"><p>QuickDev — All tools run locally in your browser.</p></div></footer>
+  <div id="toast" class="toast"></div>
+
+  <script>
+    const input = document.getElementById('input');
+    const output = document.getElementById('output');
+    const ENTITIES = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' };
+    const REV = Object.fromEntries(Object.entries(ENTITIES).map(([k,v])=>[v,k]));
+
+    function doEncode() {
+      output.textContent = input.value.replace(/[&<>"']/g, c => ENTITIES[c]);
+    }
+
+    function doDecode() {
+      const txt = document.createElement('textarea');
+      txt.innerHTML = input.value;
+      output.textContent = txt.value;
+    }
+
+    function swapIO() { const t = input.value; input.value = output.textContent; output.textContent = t; }
+    function clearAll() { input.value = ''; output.textContent = ''; }
+
+    function copyOutput() {
+      if (!output.textContent) return;
+      navigator.clipboard.writeText(output.textContent);
+      const toast = document.getElementById('toast');
+      toast.textContent = 'Copied!'; toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 1500);
+    }
+
+    input.value = '<div class="container">\n  <h1>Hello & Welcome</h1>\n  <p>Click <a href="#">here</a></p>\n</div>';
+    doEncode();
+  </script>
+</body>
+</html>
