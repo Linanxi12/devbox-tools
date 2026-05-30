@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <meta property="og:type" content="website"><meta property="og:site_name" content="QuickDev">
+  <meta property="og:title" content="CSS / JS / HTML Minifier"><meta property="og:url" content="https://quickdev.cc/tools/minifier.html">
+  <meta property="og:description" content="Minify and compress CSS, JavaScript, and HTML code. Works entirely in your browser.">
+  <meta name="twitter:card" content="summary"><meta name="twitter:title" content="CSS / JS / HTML Minifier">
+  <title>CSS / JS / HTML Minifier — Compress Code Online | QuickDev</title>
+  <meta name="description" content="Free online code minifier. Compress and minify CSS, JavaScript, and HTML. Remove whitespace and comments. Works entirely in your browser.">
+  <link rel="stylesheet" href="../css/style.css">
+<script type="text/javascript">(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window,document,"clarity","script","wz6rbq9kj8");</script>
+</head>
+<body>
+  <nav class="nav"><div class="container">
+    <a href="../index.html" class="nav-logo">QuickDev</a>
+    <div class="nav-links">
+      <a href="json-formatter.html">JSON</a><a href="base64.html">Base64</a><a href="jwt-decoder.html">JWT</a>
+      <a href="qr-generator.html">QR</a><a href="sql-formatter.html">SQL</a><a href="cron-parser.html">Cron</a>
+      <a href="regex-tester.html">Regex</a><a href="csv-json.html">CSV</a>
+      <a href="html-entity.html">HTML</a><a href="minifier.html">Minify</a><a href="diff-checker.html">Diff</a><a href="http-status.html">HTTP</a>
+    </div>
+  </div></nav>
+
+  <main class="main"><div class="container">
+    <div class="main-header">
+      <h1 class="page-title">CSS / JS / HTML Minifier</h1>
+      <p class="page-desc">Compress and minify your code by removing whitespace, comments, and unnecessary characters.</p>
+    </div>
+
+    <div class="btn-group" style="margin-bottom:8px;">
+      <button class="btn btn-primary" id="btn-css" onclick="setMode('css')">CSS</button>
+      <button class="btn btn-secondary" id="btn-js" onclick="setMode('js')">JavaScript</button>
+      <button class="btn btn-secondary" id="btn-html" onclick="setMode('html')">HTML</button>
+    </div>
+
+    <label for="code-input">Input</label>
+    <textarea id="code-input" placeholder="Paste your code here..."></textarea>
+
+    <div class="btn-group">
+      <button class="btn btn-primary" onclick="minify()">Minify</button>
+      <button class="btn btn-secondary" onclick="copyOutput()">Copy</button>
+      <button class="btn btn-danger btn-sm" onclick="clearAll()">Clear</button>
+    </div>
+
+    <div class="mt-16 flex-between">
+      <label style="margin:0">Minified Output</label>
+      <span id="savings" class="text-sm"></span>
+    </div>
+    <div id="output" class="result-area" style="min-height:120px;max-height:400px;overflow:auto;"></div>
+
+    <div class="ad-placeholder">AdSense Ad Unit</div>
+    <div class="related-tools">
+      <h4>Related Tools</h4>
+      <a href="json-formatter.html">JSON Formatter</a><a href="sql-formatter.html">SQL Formatter</a>
+      <a href="diff-checker.html">Diff Checker</a><a href="base64.html">Base64 Encoder</a>
+    </div>
+  </div></main>
+  <footer class="footer"><div class="container"><p>QuickDev — All tools run locally in your browser.</p></div></footer>
+  <div id="toast" class="toast"></div>
+
+  <script>
+    let mode = 'css';
+    function setMode(m) {
+      mode = m;
+      ['css','js','html'].forEach(x => document.getElementById('btn-'+x).className = x===m?'btn btn-primary':'btn btn-secondary');
+    }
+
+    function minify() {
+      const input = document.getElementById('code-input').value;
+      let result = '';
+      if (mode === 'css') result = minifyCSS(input);
+      else if (mode === 'js') result = minifyJS(input);
+      else result = minifyHTML(input);
+      document.getElementById('output').textContent = result;
+      const pct = input.length ? Math.round((1 - result.length / input.length) * 100) : 0;
+      document.getElementById('savings').textContent = 'Reduced by ' + pct + '% (' + (input.length - result.length) + ' chars)';
+    }
+
+    function minifyCSS(css) {
+      return css.replace(/\/\*[\s\S]*?\*\//g, '').replace(/\s+/g, ' ').replace(/\s*([{}:;,>+~])\s*/g, '$1').replace(/;}/g, '}').trim();
+    }
+
+    function minifyJS(js) {
+      return js.replace(/\/\*[\s\S]*?\*\//g, '').replace(/\/\/.*$/gm, '').replace(/\s+/g, ' ').replace(/\s*([{}();,:])\s*/g, '$1').trim();
+    }
+
+    function minifyHTML(html) {
+      return html.replace(/<!--[\s\S]*?-->/g, '').replace(/>\s+</g, '><').replace(/\s{2,}/g, ' ').trim();
+    }
+
+    function copyOutput() {
+      const t = document.getElementById('output').textContent;
+      if (!t) return;
+      navigator.clipboard.writeText(t);
+      const toast = document.getElementById('toast');
+      toast.textContent = 'Copied!'; toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 1500);
+    }
+
+    function clearAll() { document.getElementById('code-input').value = ''; document.getElementById('output').textContent = ''; document.getElementById('savings').textContent = ''; }
+
+    document.getElementById('code-input').value = 'body {\n  margin: 0;\n  padding: 0;\n  /* comment */\n  color: #333;\n  font-size: 16px;\n}\n\n.container {\n  max-width: 1200px;\n  margin: 0 auto;\n}';
+    minify();
+  </script>
+</body>
+</html>
