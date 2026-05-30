@@ -161,7 +161,7 @@
       const runs = [];
       let cursor = new Date(now);
       cursor.setMinutes(cursor.getMinutes() + 1);
-      const maxIter = 60 * 24 * 365; // 1 year max
+      const maxIter = 60 * 24 * 90; // 90 days max
       let iter = 0;
 
       while (runs.length < 5 && iter < maxIter) {
@@ -172,8 +172,11 @@
 
       const nextEl = document.getElementById('next-runs');
       if (runs.length === 0) {
-        nextEl.innerHTML = '<span class="text-sm">No upcoming runs found in the next year.</span>';
+        nextEl.innerHTML = '<span class="text-sm">No runs found in the next 90 days. Try a less restrictive expression.</span>';
         return;
+      }
+      if (iter >= maxIter) {
+        nextEl.innerHTML += '<div class="text-xs" style="color:#888;margin-top:4px;">Search limit reached. Only showing runs in the next 90 days.</div>';
       }
       nextEl.innerHTML = runs.map(r => '<div class="next-run">' + r.toLocaleString('en-US', {weekday:'short',year:'numeric',month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}) + '</div>').join('');
     }
