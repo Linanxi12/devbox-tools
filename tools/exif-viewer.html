@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <meta property="og:type" content="website"><meta property="og:site_name" content="QuickDev">
+  <meta property="og:title" content="EXIF Metadata Viewer & Remover"><meta property="og:url" content="https://quickdev.cc/tools/exif-viewer.html">
+  <meta property="og:description" content="View and remove hidden metadata from your photos. See GPS location, camera model, and date — then download a clean copy.">
+  <meta name="twitter:card" content="summary"><meta name="twitter:title" content="EXIF Metadata Viewer & Remover">
+  <meta name="twitter:description" content="View and remove hidden metadata from your photos. 100% client-side.">
+  <title>EXIF Metadata Viewer & Remover — Strip Hidden Photo Data | QuickDev</title>
+  <meta name="description" content="Free online EXIF metadata viewer and remover. See what hidden data your photos contain — GPS location, camera model, date, settings — then strip it all and download a clean copy. Works entirely in your browser.">
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    #drop-zone{border:2px dashed var(--border);border-radius:12px;padding:40px 20px;text-align:center;cursor:pointer;transition:border-color 0.2s,background 0.2s;margin-bottom:16px}
+    #drop-zone:hover,#drop-zone.dragover{border-color:var(--accent);background:rgba(78,201,176,0.04)}
+    #drop-zone .icon{font-size:2.5rem;margin-bottom:8px}
+    #drop-zone .hint{color:#888;font-size:0.82rem;margin-top:6px}
+    #preview-img{max-width:300px;max-height:300px;border-radius:8px;border:1px solid var(--border);display:none}
+    .meta-table{width:100%;border-collapse:collapse;font-size:0.82rem;margin-top:10px}
+    .meta-table td{padding:6px 10px;border-bottom:1px solid rgba(255,255,255,0.05)}
+    .meta-table td:first-child{color:var(--accent);font-weight:600;width:160px;font-family:var(--mono);font-size:0.76rem}
+    .meta-table td:last-child{word-break:break-all}
+    .warning-box{background:rgba(224,108,117,0.08);border:1px solid rgba(224,108,117,0.25);border-radius:8px;padding:12px 16px;margin:12px 0;font-size:0.82rem}
+    .warning-box strong{color:var(--danger)}
+    .section-title{color:var(--text-bright);font-size:0.9rem;font-weight:600;margin:16px 0 8px;padding-bottom:4px;border-bottom:1px solid var(--border)}
+    .gps-warn{background:rgba(224,108,117,0.15);padding:2px 6px;border-radius:3px;font-size:0.75rem}
+  </style>
+<script type="text/javascript">(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window,document,"clarity","script","wz6rbq9kj8");</script>
+</head>
+<body>
+  <nav class="nav"><div class="container">
+    <a href="../index.html" class="nav-logo">QuickDev</a>
+    <div class="nav-links">
+      <a href="json-formatter.html">JSON</a><a href="regex-tester.html">Regex</a><a href="jwt-decoder.html">JWT</a>
+      <a href="sql-formatter.html">SQL</a><a href="cron-parser.html">Cron</a><a href="qr-generator.html">QR</a>
+      <a href="base64.html">Base64</a><a href="exif-viewer.html">EXIF</a><a href="minifier.html">Minify</a>
+      <a href="csv-json.html">CSV</a><a href="http-status.html">HTTP</a><a href="diff-checker.html">Diff</a>
+      <a href="markdown-preview.html">MD</a><a href="password-generator.html">Pwd</a><a href="uuid-generator.html">UUID</a>
+      <a href="url-encoder.html">URL</a><a href="timestamp.html">TS</a><a href="color-converter.html">Color</a>
+    </div>
+  </div></nav>
+
+  <main class="main"><div class="container">
+    <div class="main-header">
+      <h1 class="page-title">EXIF Metadata Viewer & Remover</h1>
+      <p class="page-desc">See what hidden data your photos are carrying — GPS location, camera model, date, settings — then strip it all and download a clean, private copy. Everything happens in your browser.</p>
+    </div>
+
+    <div id="drop-zone" onclick="document.getElementById('file-input').click()">
+      <div class="icon">📸</div>
+      <strong>Click to upload or drag & drop an image here</strong>
+      <div class="hint">JPEG, PNG, HEIC, TIFF, WebP — any photo format. Your image never leaves your device.</div>
+    </div>
+    <input type="file" id="file-input" accept="image/*" style="display:none" onchange="handleFile(this.files[0])">
+
+    <div style="display:flex;gap:20px;align-items:flex-start;flex-wrap:wrap">
+      <div style="flex:1;min-width:250px">
+        <img id="preview-img" alt="Preview">
+        <div id="metadata-area"></div>
+      </div>
+    </div>
+
+    <div id="privacy-warning" class="warning-box" style="display:none">
+      <strong>⚠️ Privacy Alert:</strong> This image contains <span id="warn-count"></span> potentially sensitive metadata fields, including <span id="warn-details"></span>. Anyone you share this photo with can see this data.
+    </div>
+
+    <div class="btn-group" id="action-btns" style="display:none">
+      <button class="btn btn-primary" onclick="removeExif()">🔒 Download Clean Copy (No Metadata)</button>
+      <button class="btn btn-secondary" onclick="resetAll()">Clear & Try Another</button>
+    </div>
+
+    <div class="related-tools">
+      <h4>Related Tools</h4>
+      <a href="base64.html">Base64 Encoder</a><a href="minifier.html">Code Minifier</a>
+      <a href="color-converter.html">Color Converter</a><a href="qr-generator.html">QR Generator</a>
+    </div>
+  </div></main>
+  <footer class="footer"><div class="container"><p>QuickDev — All tools run locally in your browser.</p></div></footer>
+  <div id="toast" class="toast"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/exifr@7.1.3/dist/lite.umd.js"></script>
+  <script>
+    const dropZone = document.getElementById('drop-zone');
+    const metadataArea = document.getElementById('metadata-area');
+    const previewImg = document.getElementById('preview-img');
+    const actionBtns = document.getElementById('action-btns');
+    const privacyWarn = document.getElementById('privacy-warning');
+    let currentFile = null, currentExif = null;
+
+    // Drag & drop
+    dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('dragover'); });
+    dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+    dropZone.addEventListener('drop', e => {
+      e.preventDefault(); dropZone.classList.remove('dragover');
+      const file = e.dataTransfer.files[0];
+      if (file) handleFile(file);
+    });
+
+    async function handleFile(file) {
+      currentFile = file;
+      // Preview
+      const reader = new FileReader();
+      reader.onload = e => { previewImg.src = e.target.result; previewImg.style.display = 'block'; };
+      reader.readAsDataURL(file);
+
+      // Parse EXIF
+      try {
+        let exif;
+        if (typeof exifr !== 'undefined') {
+          exif = await exifr.parse(file, { gps: true, tiff: true, xmp: true, iptc: true, icc: true });
+        }
+        currentExif = exif;
+        renderMetadata(exif);
+        actionBtns.style.display = 'flex';
+      } catch(e) {
+        metadataArea.innerHTML = '<div class="text-sm" style="color:var(--danger);margin-top:12px">Failed to read metadata: ' + e.message + '</div>';
+      }
+    }
+
+    function renderMetadata(exif) {
+      if (!exif || Object.keys(exif).length === 0) {
+        metadataArea.innerHTML = '<div style="padding:20px;text-align:center;color:#888"><p style="font-size:1.2rem">✅ No metadata found</p><p class="text-sm">This image doesn\'t contain any hidden data. You\'re good to share!</p></div>';
+        privacyWarn.style.display = 'none';
+        return;
+      }
+
+      // Group metadata
+      const groups = [
+        { name: '📷 Camera & Settings', keys: ['Make','Model','LensModel','FocalLength','FNumber','ISO','ExposureTime','ExposureCompensation','Flash','WhiteBalance','MeteringMode','Software'] },
+        { name: '📍 Location (GPS)', keys: ['latitude','longitude','GPSLatitude','GPSLongitude','GPSAltitude','GPSLatitudeRef','GPSLongitudeRef'] },
+        { name: '📅 Date & Time', keys: ['DateTimeOriginal','CreateDate','ModifyDate','DateTime','OffsetTime','DateTimeDigitized'] },
+        { name: '🖼️ Image Info', keys: ['ImageWidth','ImageHeight','Orientation','ColorSpace','BitsPerSample','Compression','XResolution','YResolution','ResolutionUnit'] },
+        { name: '📱 Device', keys: ['HostComputer','DeviceManufacturer','DeviceModel','LensMake'] },
+        { name: '©️ Copyright & Author', keys: ['Copyright','Artist','OwnerName','ImageDescription','UserComment','DocumentName'] },
+      ];
+
+      let html = '';
+      let sensitiveCount = 0;
+      const sensitiveKeys = ['latitude','longitude','GPSLatitude','GPSLongitude','Make','Model','DateTimeOriginal','Copyright','Artist','OwnerName','ImageDescription','HostComputer'];
+
+      groups.forEach(g => {
+        const items = [];
+        g.keys.forEach(k => {
+          let v = exif[k];
+          if (v === undefined || v === null || v === '') return;
+          // Format
+          if (Array.isArray(v)) v = v.join(', ');
+          if (typeof v === 'number') {
+            if (k.includes('Time') || k.includes('ISO') || k.includes('FNumber')) v = String(v);
+            else if (k.includes('Longitude')||k.includes('Latitude')) v = v.toFixed(6) + '°';
+            else v = String(Math.round(v * 100) / 100);
+          }
+          if (k === 'latitude') v = Number(v).toFixed(6) + '°';
+          if (k === 'longitude') v = Number(v).toFixed(6) + '°';
+          items.push({ key: k, value: String(v), sensitive: sensitiveKeys.includes(k) });
+          if (sensitiveKeys.includes(k)) sensitiveCount++;
+        });
+        if (items.length > 0) {
+          html += '<div class="section-title">' + g.name + '</div>';
+          html += '<table class="meta-table">';
+          items.forEach(item => {
+            html += '<tr><td>' + item.key + (item.sensitive ? ' <span class="gps-warn">sensitive</span>' : '') + '</td><td>' + esc(item.value) + '</td></tr>';
+          });
+          html += '</table>';
+        }
+      });
+
+      metadataArea.innerHTML = html;
+
+      if (sensitiveCount > 0) {
+        privacyWarn.style.display = 'block';
+        document.getElementById('warn-count').textContent = sensitiveCount;
+        const details = [];
+        if (exif.latitude || exif.GPSLatitude) details.push('GPS location');
+        if (exif.Make || exif.Model) details.push('camera model');
+        if (exif.DateTimeOriginal) details.push('date taken');
+        document.getElementById('warn-details').textContent = details.join(', ') || 'personal info';
+      } else {
+        privacyWarn.style.display = 'none';
+      }
+    }
+
+    function removeExif() {
+      if (!currentFile) return;
+      const canvas = document.createElement('canvas');
+      const img = new Image();
+      img.onload = () => {
+        canvas.width = img.naturalWidth;
+        canvas.height = img.naturalHeight;
+        const ctx = canvas.getContext('2d');
+        // Preserve orientation
+        ctx.drawImage(img, 0, 0);
+        canvas.toBlob(blob => {
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          const name = currentFile.name.replace(/(\.[^.]+)$/, '_clean$1');
+          a.download = name;
+          a.click();
+          URL.revokeObjectURL(url);
+          showToast('Clean copy downloaded! 📥');
+        }, 'image/jpeg', 0.95);
+      };
+      img.src = previewImg.src;
+    }
+
+    function resetAll() {
+      currentFile = null; currentExif = null;
+      previewImg.style.display = 'none'; previewImg.src = '';
+      metadataArea.innerHTML = '';
+      actionBtns.style.display = 'none';
+      privacyWarn.style.display = 'none';
+      document.getElementById('file-input').value = '';
+    }
+
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg; t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 2000);
+    }
+    function esc(s) { return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  </script>
+</body>
+</html>
