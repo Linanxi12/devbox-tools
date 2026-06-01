@@ -96,6 +96,12 @@ label { display: block; font-size: 0.82rem; color: #999; margin-bottom: 4px; }
 .related-tools a { color: var(--accent); text-decoration: none; font-size: 0.84rem; margin-right: 14px; }
 .related-tools a:hover { text-decoration: underline; }
 
+/* Share Bar */
+.share-bar { text-align: center; padding: 0 0 8px 0; }
+.share-label { color: #666; font-size: 0.78rem; margin-right: 6px; }
+.share-link { color: var(--accent); font-size: 0.78rem; text-decoration: none; margin: 0 6px; transition: color 0.15s; cursor: pointer; }
+.share-link:hover { color: var(--text-bright); text-decoration: underline; }
+
 /* Footer */
 .footer { border-top: 1px solid var(--border); padding: 18px 0; text-align: center; color: #666; font-size: 0.78rem; }
 
