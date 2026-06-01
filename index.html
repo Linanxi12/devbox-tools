@@ -51,6 +51,7 @@
       <div class="main-header">
         <h1 class="page-title">19 Free Online Developer Tools</h1>
         <p class="page-desc">Simple, fast tools that run entirely in your browser. No sign-up. No tracking. Your data never leaves your device.</p>
+        <input type="text" id="search" placeholder="🔍  Search all 19 tools... (e.g. json, regex, jwt, sql, qr)" style="max-width:500px;margin-bottom:20px" oninput="filterTools()">
       </div>
 
       <div class="tool-grid">
@@ -139,5 +140,13 @@
       <p>QuickDev &mdash; All tools run locally in your browser. We never see your data. &nbsp; <a href="https://github.com/Linanxi12/devbox-tools/issues/new?title=Feedback&body=**Tool:**%0A**Issue:**%0A**Suggestion:**" target="_blank" style="color:var(--accent);text-decoration:underline">💬 Feedback</a></p>
     </div>
   </footer>
+<script>
+function filterTools(){
+  var q=document.getElementById('search').value.toLowerCase();
+  document.querySelectorAll('.tool-card').forEach(function(c){
+    c.style.display=(!q||c.textContent.toLowerCase().includes(q))?'':'none';
+  });
+}
+</script>
 </body>
 </html>
