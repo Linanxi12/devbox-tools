@@ -88,6 +88,12 @@
     </div>
   </main>
 
+  <div class="share-bar">
+    <span class="share-label">Share:</span>
+    <a href="#" class="share-link" onclick="navigator.clipboard.writeText(window.location.href);this.textContent='Copied!';setTimeout(()=>this.textContent='Copy Link',1500);return false">Copy Link</a>
+    <a href="#" class="share-link" onclick="window.open('https://x.com/intent/tweet?url='+encodeURIComponent(window.location.href)+'&text='+encodeURIComponent(document.title),'_blank','width=600,height=400');return false">X / Twitter</a>
+    <a href="#" class="share-link" onclick="window.open('https://www.linkedin.com/sharing/share-offsite/?url='+encodeURIComponent(window.location.href),'_blank','width=600,height=400');return false">LinkedIn</a>
+  </div>
   <footer class="footer"><div class="container"><p>QuickDev &mdash; All tools run locally in your browser.</p></div></footer>
 
   <div id="toast" class="toast"></div>
