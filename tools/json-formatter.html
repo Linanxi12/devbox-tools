@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="canonical" href="https://quickdev.cc/tools/json-formatter.html">
   <link rel="icon" type="image/svg+xml" href="../favicon.svg">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="QuickDev">
@@ -24,15 +25,24 @@
       <a href="../index.html" class="nav-logo">QuickDev</a>
       <div class="nav-links">
         <a href="json-formatter.html">JSON</a>
+        <a href="regex-tester.html">Regex</a>
+        <a href="exif-viewer.html">EXIF</a>
+        <a href="jwt-decoder.html">JWT</a>
+        <a href="sql-formatter.html">SQL</a>
+        <a href="cron-parser.html">Cron</a>
+        <a href="qr-generator.html">QR</a>
         <a href="base64.html">Base64</a>
+        <a href="minifier.html">Minify</a>
+        <a href="csv-json.html">CSV</a>
+        <a href="html-entity.html">HTML</a>
+        <a href="http-status.html">HTTP</a>
+        <a href="diff-checker.html">Diff</a>
+        <a href="markdown-preview.html">MD</a>
+        <a href="password-generator.html">Pwd</a>
         <a href="uuid-generator.html">UUID</a>
         <a href="url-encoder.html">URL</a>
-        <a href="timestamp.html">Timestamp</a>
-        <a href="regex-tester.html">Regex</a>
-        <a href="password-generator.html">Password</a>
-        <a href="markdown-preview.html">Markdown</a>
+        <a href="timestamp.html">TS</a>
         <a href="color-converter.html">Color</a>
-        <a href="diff-checker.html">Diff</a>
       </div>
     </div>
   </nav>
@@ -42,9 +52,14 @@
       <div class="main-header">
         <h1 class="page-title">{ } JSON Formatter</h1>
         <p class="page-desc">Format, validate, and minify JSON. Everything runs in your browser — your data stays private.</p>
-      </div>
+      
+    <div class="tool-info">
+      <h2>Online JSON Formatter, Validator & Minifier</h2>
+      <p>JSON (JavaScript Object Notation) is the standard data format for APIs, config files, and web development. When you're debugging an API response, reading a compressed JSON file, or validating data before sending it to production — this tool handles it instantly without sending your data to any server.</p>
+      <p><strong>When to use:</strong> Debugging REST API responses, pretty-printing minified JSON, validating JSON before deployment, extracting and formatting deeply nested objects.</p>
+    </div>
 
-      <label>Input</label>
+      <label for="input">Input</label>
       <textarea id="input" placeholder='Paste your JSON here... e.g. {"name":"John","age":30}'></textarea>
 
       <div class="btn-group">
