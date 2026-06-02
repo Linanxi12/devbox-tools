@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="canonical" href="https://quickdev.cc/tools/regex-tester.html">
   <link rel="icon" type="image/svg+xml" href="../favicon.svg">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="QuickDev">
@@ -27,15 +28,24 @@
       <a href="../index.html" class="nav-logo">QuickDev</a>
       <div class="nav-links">
         <a href="json-formatter.html">JSON</a>
+        <a href="regex-tester.html">Regex</a>
+        <a href="exif-viewer.html">EXIF</a>
+        <a href="jwt-decoder.html">JWT</a>
+        <a href="sql-formatter.html">SQL</a>
+        <a href="cron-parser.html">Cron</a>
+        <a href="qr-generator.html">QR</a>
         <a href="base64.html">Base64</a>
+        <a href="minifier.html">Minify</a>
+        <a href="csv-json.html">CSV</a>
+        <a href="html-entity.html">HTML</a>
+        <a href="http-status.html">HTTP</a>
+        <a href="diff-checker.html">Diff</a>
+        <a href="markdown-preview.html">MD</a>
+        <a href="password-generator.html">Pwd</a>
         <a href="uuid-generator.html">UUID</a>
         <a href="url-encoder.html">URL</a>
-        <a href="timestamp.html">Timestamp</a>
-        <a href="regex-tester.html">Regex</a>
-        <a href="password-generator.html">Password</a>
-        <a href="markdown-preview.html">Markdown</a>
+        <a href="timestamp.html">TS</a>
         <a href="color-converter.html">Color</a>
-        <a href="diff-checker.html">Diff</a>
       </div>
     </div>
   </nav>
@@ -47,11 +57,26 @@
         <p class="page-desc">Test JavaScript regular expressions in real time. See matches highlighted as you type.</p>
       </div>
 
-      <label for="pattern">Pattern</label>
-      <div class="tool-row">
-        <input type="text" id="pattern" placeholder="e.g. (\w+)@(\w+\.\w+)" style="flex:3;">
-        <input type="text" id="flags" placeholder="Flags: g i m s" style="flex:0.5;min-width:90px;">
+    <div class="tool-info">
+      <h2>Online Regex Tester with Real-Time Match Highlighting</h2>
+      <p>Regular expressions are powerful but notoriously hard to debug. This regex tester gives you instant visual feedback — type your pattern and see exactly what matches, with capture groups highlighted. Supports all JavaScript regex flags (g, i, m, s, u, y).</p>
+      <p><strong>When to use:</strong> Writing email/phone/URL validation patterns, extracting data from logs or HTML, testing regex for production code, learning regular expressions with live feedback.</p>
+    </div>
+
+      <div class="tool-row" style="gap:8px">
+        <div style="flex:3">
+          <label for="pattern">Pattern</label>
+          <input type="text" id="pattern" placeholder="e.g. (\w+)@(\w+\.\w+)" style="width:100%">
+        </div>
+        <div style="flex:0.5;min-width:90px">
+          <label for="flags">Flags</label>
+          <input type="text" id="flags" placeholder="g i m s" style="width:100%">
+        </div>
       </div>
+      <h2>Online Regex Tester with Real-Time Match Highlighting</h2>
+      <p>Regular expressions are powerful but notoriously hard to debug. This regex tester gives you instant visual feedback — type your pattern and see exactly what matches, with capture groups highlighted. Supports all JavaScript regex flags (g, i, m, s, u, y).</p>
+      <p><strong>When to use:</strong> Writing email/phone/URL validation patterns, extracting data from logs or HTML, testing regex for production code, learning regular expressions with live feedback.</p>
+    </div>
 
       <label class="mt-12" for="test-string">Test String</label>
       <textarea id="test-string" placeholder="Enter text to test against your regex pattern..."></textarea>
