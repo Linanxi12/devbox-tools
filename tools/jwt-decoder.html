@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="canonical" href="https://quickdev.cc/tools/jwt-decoder.html">
   <link rel="icon" type="image/svg+xml" href="../favicon.svg">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="QuickDev">
@@ -28,15 +29,24 @@
       <a href="../index.html" class="nav-logo">QuickDev</a>
       <div class="nav-links">
         <a href="json-formatter.html">JSON</a>
-        <a href="base64.html">Base64</a>
-        <a href="jwt-decoder.html">JWT</a>
-        <a href="qr-generator.html">QR</a>
-        <a href="sql-formatter.html">SQL</a>
         <a href="regex-tester.html">Regex</a>
-        <a href="password-generator.html">Password</a>
-        <a href="markdown-preview.html">Markdown</a>
-        <a href="color-converter.html">Color</a>
+        <a href="exif-viewer.html">EXIF</a>
+        <a href="jwt-decoder.html">JWT</a>
+        <a href="sql-formatter.html">SQL</a>
+        <a href="cron-parser.html">Cron</a>
+        <a href="qr-generator.html">QR</a>
+        <a href="base64.html">Base64</a>
+        <a href="minifier.html">Minify</a>
+        <a href="csv-json.html">CSV</a>
+        <a href="html-entity.html">HTML</a>
+        <a href="http-status.html">HTTP</a>
         <a href="diff-checker.html">Diff</a>
+        <a href="markdown-preview.html">MD</a>
+        <a href="password-generator.html">Pwd</a>
+        <a href="uuid-generator.html">UUID</a>
+        <a href="url-encoder.html">URL</a>
+        <a href="timestamp.html">TS</a>
+        <a href="color-converter.html">Color</a>
       </div>
     </div>
   </nav>
@@ -46,7 +56,12 @@
       <div class="main-header">
         <h1 class="page-title">JWT Decoder</h1>
         <p class="page-desc">Decode and inspect JSON Web Tokens (JWT) header and payload. All decoding happens locally — your tokens are never sent anywhere.</p>
-      </div>
+      
+    <div class="tool-info">
+      <h2>Free Online JWT Token Decoder</h2>
+      <p>JSON Web Tokens (JWT) are used everywhere for authentication — but the payload is Base64-encoded, not encrypted. This tool decodes the header and payload instantly, checks token expiry, and shows you exactly what information is inside your tokens. Everything happens client-side, so your tokens stay private.</p>
+      <p><strong>When to use:</strong> Debugging authentication issues, inspecting issued tokens during development, checking JWT expiry before tokens cause 401 errors, learning what data your auth provider includes.</p>
+    </div>
 
       <label for="jwt-input">Paste Your JWT Token</label>
       <textarea id="jwt-input" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c" style="min-height:80px;"></textarea>
