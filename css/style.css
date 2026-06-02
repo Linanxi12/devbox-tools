@@ -91,6 +91,12 @@ label { display: block; font-size: 0.82rem; color: #999; margin-bottom: 4px; }
 }
 
 /* Related Tools */
+/* Tool Info / SEO content */
+.tool-info { margin-top: 18px; padding: 14px 16px; background: rgba(255,255,255,0.02); border-left: 3px solid var(--accent); border-radius: 4px; }
+.tool-info h2 { font-size: 1rem; color: var(--text-bright); margin-bottom: 6px; }
+.tool-info p { font-size: 0.84rem; color: #999; line-height: 1.6; margin-bottom: 6px; }
+.tool-info strong { color: var(--text); }
+
 .related-tools { margin-top: 28px; padding-top: 18px; border-top: 1px solid var(--border); }
 .related-tools h4 { color: var(--text-bright); margin-bottom: 10px; font-size: 0.88rem; }
 .related-tools a { color: var(--accent); text-decoration: none; font-size: 0.84rem; margin-right: 14px; }
