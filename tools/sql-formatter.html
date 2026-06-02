@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="canonical" href="https://quickdev.cc/tools/sql-formatter.html">
   <link rel="icon" type="image/svg+xml" href="../favicon.svg">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="QuickDev">
@@ -24,15 +25,24 @@
       <a href="../index.html" class="nav-logo">QuickDev</a>
       <div class="nav-links">
         <a href="json-formatter.html">JSON</a>
-        <a href="base64.html">Base64</a>
-        <a href="jwt-decoder.html">JWT</a>
-        <a href="qr-generator.html">QR</a>
-        <a href="sql-formatter.html">SQL</a>
         <a href="regex-tester.html">Regex</a>
-        <a href="password-generator.html">Password</a>
-        <a href="markdown-preview.html">Markdown</a>
-        <a href="color-converter.html">Color</a>
+        <a href="exif-viewer.html">EXIF</a>
+        <a href="jwt-decoder.html">JWT</a>
+        <a href="sql-formatter.html">SQL</a>
+        <a href="cron-parser.html">Cron</a>
+        <a href="qr-generator.html">QR</a>
+        <a href="base64.html">Base64</a>
+        <a href="minifier.html">Minify</a>
+        <a href="csv-json.html">CSV</a>
+        <a href="html-entity.html">HTML</a>
+        <a href="http-status.html">HTTP</a>
         <a href="diff-checker.html">Diff</a>
+        <a href="markdown-preview.html">MD</a>
+        <a href="password-generator.html">Pwd</a>
+        <a href="uuid-generator.html">UUID</a>
+        <a href="url-encoder.html">URL</a>
+        <a href="timestamp.html">TS</a>
+        <a href="color-converter.html">Color</a>
       </div>
     </div>
   </nav>
@@ -42,7 +52,12 @@
       <div class="main-header">
         <h1 class="page-title">SQL Formatter</h1>
         <p class="page-desc">Format and beautify SQL queries. Supports MySQL, PostgreSQL, SQLite, and standard SQL. All formatting happens in your browser.</p>
-      </div>
+      
+    <div class="tool-info">
+      <h2>Free SQL Formatter & Beautifier Online</h2>
+      <p>Working with unformatted SQL is painful — especially long queries with multiple JOINs, subqueries, and WHERE clauses. This SQL formatter beautifies your queries with consistent indentation and keyword capitalization, making complex SQL readable in seconds.</p>
+      <p><strong>When to use:</strong> Formatting SQL from application logs, beautifying queries before code reviews, making legacy SQL readable, standardizing query formatting across a team.</p>
+    </div>
 
       <label for="sql-input">Input SQL</label>
       <textarea id="sql-input" placeholder='Paste your SQL here… e.g. SELECT id,name,email FROM users WHERE active=1 ORDER BY name'></textarea>
