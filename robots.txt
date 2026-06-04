@@ -1,5 +1,5 @@
 User-agent: *
 Allow: /
-Sitemap: https://devbox.tools/sitemap.xml
+Sitemap: https://quickdev.cc/sitemap.xml
 
 # Crawl everything — all tools are client-side and safe to index
