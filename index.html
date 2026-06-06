@@ -66,83 +66,91 @@
         <input type="text" id="search" placeholder="🔍  Search all 19 tools... (e.g. json, regex, jwt, sql, qr)" style="max-width:500px;margin-bottom:20px" oninput="filterTools()">
       </div>
 
-      <div class="tool-grid">
-        <a href="tools/json-formatter.html" class="tool-card">
-          <h3>{ } JSON Formatter</h3>
-          <p>Format, validate, and minify JSON data in real-time</p>
-        </a>
-        <a href="tools/base64.html" class="tool-card">
-          <h3>&lt;/&gt; Base64 Encoder</h3>
-          <p>Encode and decode Base64 text or files instantly</p>
-        </a>
-        <a href="tools/jwt-decoder.html" class="tool-card">
-          <h3>JWT Decoder</h3>
-          <p>Decode and inspect JSON Web Token header and payload</p>
-        </a>
-        <a href="tools/exif-viewer.html" class="tool-card">
-          <h3>📸 EXIF Metadata Viewer</h3>
-          <p>See hidden data in your photos — GPS, camera, date — and strip it clean</p>
-        </a>
-        <a href="tools/qr-generator.html" class="tool-card">
-          <h3>QR Code Generator</h3>
-          <p>Create QR codes for URLs, text, WiFi, and more</p>
-        </a>
-        <a href="tools/sql-formatter.html" class="tool-card">
-          <h3>SQL Formatter</h3>
-          <p>Format and beautify SQL queries with proper indentation</p>
-        </a>
-        <a href="tools/cron-parser.html" class="tool-card">
-          <h3>Cron Parser</h3>
-          <p>Parse cron expressions and see human-readable schedules</p>
-        </a>
-        <a href="tools/csv-json.html" class="tool-card">
-          <h3>CSV ↔ JSON</h3>
-          <p>Convert between CSV and JSON formats with auto-detection</p>
-        </a>
-        <a href="tools/html-entity.html" class="tool-card">
-          <h3>HTML Entity Encoder</h3>
-          <p>Convert special characters to HTML-safe entities and back</p>
-        </a>
-        <a href="tools/minifier.html" class="tool-card">
-          <h3>CSS / JS / HTML Minifier</h3>
-          <p>Compress code by removing whitespace and comments</p>
-        </a>
-        <a href="tools/http-status.html" class="tool-card">
-          <h3>HTTP Status Codes</h3>
-          <p>Complete reference of all HTTP status codes with search</p>
-        </a>
-        <a href="tools/uuid-generator.html" class="tool-card">
-          <h3>UUID Generator</h3>
-          <p>Generate UUID v4 identifiers in bulk</p>
-        </a>
-        <a href="tools/url-encoder.html" class="tool-card">
-          <h3>URL Encoder</h3>
-          <p>URL-encode and decode query strings and paths</p>
-        </a>
-        <a href="tools/timestamp.html" class="tool-card">
-          <h3>Timestamp Converter</h3>
-          <p>Convert between Unix timestamps and human-readable dates</p>
-        </a>
-        <a href="tools/regex-tester.html" class="tool-card">
-          <h3>Regex Tester</h3>
-          <p>Test regular expressions with real-time match highlighting</p>
-        </a>
-        <a href="tools/password-generator.html" class="tool-card">
-          <h3>Password Generator</h3>
-          <p>Generate strong, cryptographically random passwords</p>
-        </a>
-        <a href="tools/markdown-preview.html" class="tool-card">
-          <h3>Markdown Preview</h3>
-          <p>Write and preview Markdown in real time with syntax highlighting</p>
-        </a>
-        <a href="tools/color-converter.html" class="tool-card">
-          <h3>Color Converter</h3>
-          <p>Convert between HEX, RGB, HSL, and pick colors visually</p>
-        </a>
-        <a href="tools/diff-checker.html" class="tool-card">
-          <h3>Text Diff Checker</h3>
-          <p>Compare two texts side by side and find every difference</p>
-        </a>
+      <!-- Inline JSON Formatter -->
+      <div class="inline-tool">
+        <div class="inline-header">
+          <span class="inline-badge">Most Popular</span>
+          <a href="tools/json-formatter.html" class="inline-title">JSON Formatter &mdash; try it here</a>
+        </div>
+        <div class="inline-grid" style="display:flex;gap:12px;flex-wrap:wrap;">
+          <div style="flex:1;min-width:240px;">
+            <textarea id="inline-input" placeholder="Paste your JSON here... e.g. {&quot;hello&quot;:&quot;world&quot;}" style="min-height:120px;"></textarea>
+            <div class="btn-group" style="margin-top:8px">
+              <button class="btn btn-primary btn-sm" onclick="inlineFormat()">Format</button>
+              <button class="btn btn-secondary btn-sm" onclick="inlineMinify()">Minify</button>
+              <button class="btn btn-secondary btn-sm" onclick="inlineCopy()">Copy</button>
+            </div>
+          </div>
+          <div style="flex:1;min-width:240px;">
+            <pre id="inline-output" class="result-area" style="min-height:120px;max-height:300px;overflow:auto;color:#888">Formatted JSON will appear here...</pre>
+            <div id="inline-error" class="error-msg" style="display:none"></div>
+          </div>
+        </div>
+        <div class="text-sm" style="margin-top:8px;color:#888">
+          🤔 What does this mean? <a href="tools/jwt-decoder.html">Decode JWT</a> &middot; <a href="tools/sql-formatter.html">Format SQL</a> &middot; <a href="tools/regex-tester.html">Test Regex</a> &middot; <a href="tools/exif-viewer.html">Check EXIF</a>
+        </div>
+      </div>
+
+      <!-- All Tools — by category -->
+      <div class="tool-category">
+        <h3 class="cat-title">📝 Formatters</h3>
+        <div class="tool-grid">
+          <a href="tools/json-formatter.html" class="tool-card"><h3>{ } JSON</h3><p>Format, validate & minify JSON</p></a>
+          <a href="tools/sql-formatter.html" class="tool-card"><h3>SQL</h3><p>Beautify SQL queries</p></a>
+          <a href="tools/html-entity.html" class="tool-card"><h3>HTML Entity</h3><p>Encode/decode HTML special chars</p></a>
+          <a href="tools/minifier.html" class="tool-card"><h3>CSS/JS/HTML Minifier</h3><p>Compress code, strip comments</p></a>
+        </div>
+      </div>
+
+      <div class="tool-category">
+        <h3 class="cat-title">🔐 Encoders & Decoders</h3>
+        <div class="tool-grid">
+          <a href="tools/base64.html" class="tool-card"><h3>Base64</h3><p>Encode/decode Base64 text</p></a>
+          <a href="tools/url-encoder.html" class="tool-card"><h3>URL Encoder</h3><p>URL-encode & decode strings</p></a>
+          <a href="tools/jwt-decoder.html" class="tool-card"><h3>JWT Decoder</h3><p>Decode & inspect JWT tokens</p></a>
+        </div>
+      </div>
+
+      <div class="tool-category">
+        <h3 class="cat-title">🛠️ Generators</h3>
+        <div class="tool-grid">
+          <a href="tools/uuid-generator.html" class="tool-card"><h3>UUID</h3><p>Generate UUID v4 in bulk</p></a>
+          <a href="tools/password-generator.html" class="tool-card"><h3>Password</h3><p>Generate strong random passwords</p></a>
+          <a href="tools/qr-generator.html" class="tool-card"><h3>QR Code</h3><p>Create & download QR codes</p></a>
+        </div>
+      </div>
+
+      <div class="tool-category">
+        <h3 class="cat-title">📊 Converters</h3>
+        <div class="tool-grid">
+          <a href="tools/csv-json.html" class="tool-card"><h3>CSV ↔ JSON</h3><p>Convert CSV to/from JSON</p></a>
+          <a href="tools/color-converter.html" class="tool-card"><h3>Color Converter</h3><p>HEX / RGB / HSL converter</p></a>
+          <a href="tools/markdown-preview.html" class="tool-card"><h3>Markdown Preview</h3><p>Write & preview markdown</p></a>
+          <a href="tools/timestamp.html" class="tool-card"><h3>Timestamp</h3><p>Unix time ↔ date converter</p></a>
+        </div>
+      </div>
+
+      <div class="tool-category">
+        <h3 class="cat-title">🔍 Testers & Diff</h3>
+        <div class="tool-grid">
+          <a href="tools/regex-tester.html" class="tool-card"><h3>Regex Tester</h3><p>Real-time regex matching</p></a>
+          <a href="tools/diff-checker.html" class="tool-card"><h3>Diff Checker</h3><p>Compare text side by side</p></a>
+        </div>
+      </div>
+
+      <div class="tool-category">
+        <h3 class="cat-title">📖 References</h3>
+        <div class="tool-grid">
+          <a href="tools/http-status.html" class="tool-card"><h3>HTTP Status Codes</h3><p>Complete status code reference</p></a>
+          <a href="tools/cron-parser.html" class="tool-card"><h3>Cron Parser</h3><p>Parse cron schedules, see next runs</p></a>
+        </div>
+      </div>
+
+      <div class="tool-category">
+        <h3 class="cat-title">🔒 Privacy</h3>
+        <div class="tool-grid">
+          <a href="tools/exif-viewer.html" class="tool-card"><h3>📸 EXIF Viewer</h3><p>See & remove hidden photo metadata</p></a>
+        </div>
       </div>
     </div>
   </main>
@@ -153,10 +161,35 @@
     </div>
   </footer>
 <script>
+function inlineFormat(){
+  var err=document.getElementById('inline-error'); err.style.display='none';
+  var out=document.getElementById('inline-output');
+  try { var d=JSON.parse(document.getElementById('inline-input').value); out.textContent=JSON.stringify(d,null,2); out.style.color='var(--text-bright)'; }
+  catch(e){ err.style.display='block'; err.textContent='Invalid JSON: '+e.message; out.textContent=''; }
+}
+function inlineMinify(){
+  var err=document.getElementById('inline-error'); err.style.display='none';
+  var out=document.getElementById('inline-output');
+  try { var d=JSON.parse(document.getElementById('inline-input').value); out.textContent=JSON.stringify(d); out.style.color='var(--accent)'; }
+  catch(e){ err.style.display='block'; err.textContent='Invalid JSON: '+e.message; out.textContent=''; }
+}
+function inlineCopy(){
+  var t=document.getElementById('inline-output').textContent;
+  if(t){ navigator.clipboard.writeText(t); }
+}
+document.getElementById('inline-input').value='{"name":"QuickDev","tools":19,"features":["client-side","no tracking","free"]}';
+inlineFormat();
+
 function filterTools(){
   var q=document.getElementById('search').value.toLowerCase();
-  document.querySelectorAll('.tool-card').forEach(function(c){
-    c.style.display=(!q||c.textContent.toLowerCase().includes(q))?'':'none';
+  document.querySelectorAll('.tool-category').forEach(function(cat){
+    var any=!q;
+    cat.querySelectorAll('.tool-card').forEach(function(c){
+      var match=!q||c.textContent.toLowerCase().includes(q);
+      c.style.display=match?'':'none';
+      if(match) any=true;
+    });
+    cat.style.display=any?'':'none';
   });
 }
 </script>
