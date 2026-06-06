@@ -90,6 +90,17 @@ label { display: block; font-size: 0.82rem; color: #999; margin-bottom: 4px; }
   color: #666; font-size: 0.8rem; margin: 22px 0;
 }
 
+/* Inline Tool (homepage embedded JSON) */
+.inline-tool { background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; padding: 18px 20px; margin-bottom: 24px; }
+.inline-header { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+.inline-badge { background: var(--accent); color: #1e1e1e; font-size: 0.68rem; font-weight: 700; padding: 2px 8px; border-radius: 4px; text-transform: uppercase; }
+.inline-title { color: var(--text-bright); font-size: 0.88rem; font-weight: 600; text-decoration: none; }
+.inline-title:hover { text-decoration: underline; }
+.inline-grid { margin-bottom: 4px; }
+/* Category titles */
+.cat-title { color: var(--text-bright); font-size: 0.92rem; margin: 24px 0 10px; padding-bottom: 6px; border-bottom: 1px solid var(--border); }
+.tool-category { margin-bottom: 8px; }
+
 /* Related Tools */
 /* Tool Info / SEO content */
 .tool-info { margin-top: 18px; padding: 14px 16px; background: rgba(255,255,255,0.02); border-left: 3px solid var(--accent); border-radius: 4px; }
