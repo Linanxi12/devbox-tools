@@ -70,6 +70,29 @@
       <p class="page-desc">Parse cron expressions, see human-readable explanations, and preview upcoming execution times.</p>
     </div>
 
+    <details style="margin-bottom:14px"><summary style="cursor:pointer;font-weight:600;font-size:0.88rem;color:var(--accent)">🛠️ Cron Builder — construct expressions visually</summary>
+    <div style="margin-top:10px">
+    <div class="type-grid" style="margin-bottom:12px">
+      <button class="btn btn-sm btn-secondary" onclick="setCron('* * * * *','Every minute')">Every Minute</button>
+      <button class="btn btn-sm btn-secondary" onclick="setCron('0 * * * *','Every hour')">Every Hour</button>
+      <button class="btn btn-sm btn-secondary" onclick="setCron('0 0 * * *','Daily midnight')">Daily</button>
+      <button class="btn btn-sm btn-secondary" onclick="setCron('0 0 * * 1','Weekly (Mon)')">Weekly</button>
+      <button class="btn btn-sm btn-secondary" onclick="setCron('0 0 1 * *','Monthly (1st)')">Monthly</button>
+      <button class="btn btn-sm btn-secondary" onclick="setCron('0 9 * * 1-5','Weekdays 9am')">Weekdays 9AM</button>
+      <button class="btn btn-sm btn-secondary" onclick="setCron('*/15 * * * *','Every 15 min')">Every 15 Min</button>
+      <button class="btn btn-sm btn-secondary" onclick="setCron('*/30 * * * *','Every 30 min')">Every 30 Min</button>
+      <button class="btn btn-sm btn-secondary" onclick="setCron('0 0 * * 0','Weekly (Sun)')">Weekly (Sun)</button>
+      <button class="btn btn-sm btn-secondary" onclick="setCron('30 2 * * *','2:30 AM daily')">2:30 AM Daily</button>
+    </div>
+    <div class="tool-row" style="gap:8px">
+      <div><label style="font-size:0.75rem">Minute</label><input type="text" id="cm" value="*" style="text-align:center" oninput="buildCron()"></div>
+      <div><label style="font-size:0.75rem">Hour</label><input type="text" id="ch" value="*" style="text-align:center" oninput="buildCron()"></div>
+      <div><label style="font-size:0.75rem">Day</label><input type="text" id="cd" value="*" style="text-align:center" oninput="buildCron()"></div>
+      <div><label style="font-size:0.75rem">Month</label><input type="text" id="cmo" value="*" style="text-align:center" oninput="buildCron()"></div>
+      <div><label style="font-size:0.75rem">Weekday</label><input type="text" id="cw" value="*" style="text-align:center" oninput="buildCron()"></div>
+    </div>
+    </div></details>
+
     <label for="cron-input">Cron Expression</label>
     <input type="text" id="cron-input" placeholder="*/15 6-18 * * 1-5" value="*/15 6-18 * * 1-5" oninput="parseCron()">
 
@@ -222,6 +245,9 @@
       const vals = [date.getMinutes(), date.getHours(), date.getDate(), date.getMonth()+1, date.getDay()];
       return parsed.every((p,i) => p.values.includes(vals[i]));
     }
+
+    function setCron(expr,desc){ document.getElementById('cron-input').value=expr; document.getElementById('explanation').innerHTML='<strong style=\"color:var(--accent)\">📅</strong> '+desc; parseCron(); var p=expr.split(/\\s+/); if(p.length===5){ ['cm','ch','cd','cmo','cw'].forEach(function(id,i){ document.getElementById(id).value=p[i]; }); } }
+    function buildCron(){ var v=['cm','ch','cd','cmo','cw'].map(function(id){ return document.getElementById(id).value.trim()||'*'; }); document.getElementById('cron-input').value=v.join(' '); parseCron(); }
 
     parseCron();
   </script>
