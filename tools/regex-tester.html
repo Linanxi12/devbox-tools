@@ -75,6 +75,28 @@
       <p><strong>When to use:</strong> Writing email/phone/URL validation patterns, extracting data from logs or HTML, testing regex for production code, learning regular expressions with live feedback.</p>
     </div>
 
+    <details style="margin-bottom:14px"><summary style="cursor:pointer;font-weight:600;font-size:0.88rem;color:var(--accent)">📚 Regex Pattern Library — click to expand</summary>
+    <div style="margin-top:10px;display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:8px">
+    <div><strong style="color:var(--text-bright);font-size:0.8rem">🔐 Validation</strong>
+    <button class="btn btn-sm btn-secondary" style="display:block;width:100%;margin:3px 0;text-align:left" onclick="setRegex('^[\\w.-]+@[\\w.-]+\\.\\w{2,}$','','Email validation')">📧 Email</button>
+    <button class="btn btn-sm btn-secondary" style="display:block;width:100%;margin:3px 0;text-align:left" onclick="setRegex('^\\+?[1-9]\\d{1,14}$','','Phone (E.164)')">📱 Phone (E.164)</button>
+    <button class="btn btn-sm btn-secondary" style="display:block;width:100%;margin:3px 0;text-align:left" onclick="setRegex('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[A-Za-z\\d@$!%*?&]{8,}$','','Strong password')">🔒 Strong Password</button>
+    <button class="btn btn-sm btn-secondary" style="display:block;width:100%;margin:3px 0;text-align:left" onclick="setRegex('^[a-zA-Z0-9_]{3,16}$','','Username (3-16 chars)')">👤 Username</button>
+    </div>
+    <div><strong style="color:var(--text-bright);font-size:0.8rem">🌐 URLs & IPs</strong>
+    <button class="btn btn-sm btn-secondary" style="display:block;width:100%;margin:3px 0;text-align:left" onclick="setRegex('https?:\\/\\/[\\w.-]+(:\\d+)?(\\/[\\w./?%&=-]*)?','','URL matching')">🔗 URL (http/https)</button>
+    <button class="btn btn-sm btn-secondary" style="display:block;width:100%;margin:3px 0;text-align:left" onclick="setRegex('^\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}$','','IPv4 address')">🌍 IPv4</button>
+    <button class="btn btn-sm btn-secondary" style="display:block;width:100%;margin:3px 0;text-align:left" onclick="setRegex('^([0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}$','','IPv6 address')">🌏 IPv6</button>
+    </div>
+    <div><strong style="color:var(--text-bright);font-size:0.8rem">📅 Date & Time</strong>
+    <button class="btn btn-sm btn-secondary" style="display:block;width:100%;margin:3px 0;text-align:left" onclick="setRegex('^\\d{4}-\\d{2}-\\d{2}$','','ISO date (YYYY-MM-DD)')">📆 ISO Date</button>
+    <button class="btn btn-sm btn-secondary" style="display:block;width:100%;margin:3px 0;text-align:left" onclick="setRegex('^\\d{2}:\\d{2}(:\\d{2})?$','','Time (HH:MM or HH:MM:SS)')">⏰ Time</button>
+    </div>
+    <div><strong style="color:var(--text-bright);font-size:0.8rem">💻 Code</strong>
+    <button class="btn btn-sm btn-secondary" style="display:block;width:100%;margin:3px 0;text-align:left" onclick="setRegex('<[^>]+>','g','HTML tags')">💻 HTML Tags</button>
+    <button class="btn btn-sm btn-secondary" style="display:block;width:100%;margin:3px 0;text-align:left" onclick="setRegex('#[0-9a-fA-F]{3,8}','g','Hex color code')">🎨 Hex Color</button>
+    </div></div></details>
+
       <div class="tool-row" style="gap:8px">
         <div style="flex:3">
           <label for="pattern">Pattern</label>
@@ -187,6 +209,8 @@
         errorEl.textContent = 'Regex Error: ' + e.message;
       }
     }
+
+    function setRegex(p,f,t){ document.getElementById('pattern').value=p; document.getElementById('flags').value=f; document.getElementById('test-string').value=t; runRegex(); }
 
     patternEl.addEventListener('input', runRegex);
     flagsEl.addEventListener('input', runRegex);
