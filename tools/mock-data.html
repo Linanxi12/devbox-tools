@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="canonical" href="https://quickdev.cc/tools/mock-data.html">
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <meta property="og:type" content="website"><meta property="og:site_name" content="QuickDev">
+  <meta property="og:title" content="Mock Data Generator — Fake Test Data"><meta property="og:url" content="https://quickdev.cc/tools/mock-data.html">
+  <meta property="og:description" content="Generate realistic fake data for testing. User profiles, addresses, companies, and API responses. Export as JSON or CSV.">
+  <meta name="twitter:card" content="summary"><meta name="twitter:title" content="Mock Data Generator"><meta name="twitter:creator" content="@quickdev">
+  <title>Mock Data Generator — Generate Fake Test Data Online | QuickDev</title>
+  <meta name="description" content="Free online mock data generator. Generate fake user profiles, addresses, companies, and API responses for testing and development. Export as JSON or CSV. Works entirely in your browser.">
+  <link rel="stylesheet" href="../css/style.css">
+  <style>.type-btn{display:inline-flex;align-items:center;gap:4px;padding:10px 16px;border:1px solid var(--border);border-radius:8px;cursor:pointer;font-size:0.82rem;background:var(--bg-card);color:var(--text);transition:all 0.15s}
+    .type-btn:hover{border-color:var(--accent)}.type-btn.active{background:var(--accent);color:#1e1e1e;border-color:var(--accent);font-weight:700}
+    .type-grid{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+    .count-row{display:flex;align-items:center;gap:10px;margin:16px 0}
+    .count-row input{width:100px;text-align:center;font-size:1rem}
+    #result-area{background:var(--bg-light);border:1px solid var(--border);border-radius:var(--radius);padding:12px;font-family:var(--font-mono);font-size:0.84rem;min-height:150px;max-height:500px;overflow:auto;white-space:pre-wrap;color:var(--text-bright)}</style>
+<script type="text/javascript">(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window,document,"clarity","script","wz6rbq9kj8");</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Mock Data Generator","url":"https://quickdev.cc/tools/mock-data.html","description":"Generate realistic fake test data — user profiles, addresses, companies, API responses. Export as JSON or CSV.","applicationCategory":"DeveloperApplication","operatingSystem":"All","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}</script>
+</head>
+<body>
+  <nav class="nav"><div class="container">
+    <a href="../index.html" class="nav-logo">QuickDev</a>
+    <div class="nav-links">
+      <a href="json-formatter.html">JSON</a><a href="regex-tester.html">Regex</a><a href="mock-data.html">Mock</a>
+      <a href="exif-viewer.html">EXIF</a><a href="jwt-decoder.html">JWT</a><a href="sql-formatter.html">SQL</a>
+      <a href="cron-parser.html">Cron</a><a href="qr-generator.html">QR</a><a href="base64.html">Base64</a>
+      <a href="minifier.html">Minify</a><a href="csv-json.html">CSV</a><a href="diff-checker.html">Diff</a>
+      <a href="http-status.html">HTTP</a><a href="markdown-preview.html">MD</a><a href="color-converter.html">Color</a>
+    </div>
+  </div></nav>
+
+  <main class="main"><div class="container">
+    <div class="main-header">
+      <h1 class="page-title">Mock Data Generator</h1>
+      <p class="page-desc">Generate realistic fake data for testing, demos, and development. Export as JSON or CSV. All generated locally — no server calls.</p>
+    </div>
+
+    <div class="tool-info">
+      <h2>Free Fake Data Generator for Developers</h2>
+      <p>Need test data for your app? This tool generates realistic mock data — users, addresses, companies, and API responses — in JSON or CSV format. Perfect for prototyping, populating databases, writing tests, and creating demos. No API calls, no server, all in your browser.</p>
+      <p><strong>When to use:</strong> Filling a dev database, testing API endpoints, creating demo accounts, writing unit tests, prototyping UI components.</p>
+    </div>
+
+    <label style="font-weight:600;margin-bottom:8px">What kind of data do you need?</label>
+    <div class="type-grid">
+      <button class="type-btn active" onclick="selectType('user')">👤 User Profiles</button>
+      <button class="type-btn" onclick="selectType('address')">📍 Addresses</button>
+      <button class="type-btn" onclick="selectType('company')">🏢 Companies</button>
+      <button class="type-btn" onclick="selectType('api')">📡 API Response</button>
+    </div>
+
+    <div class="count-row">
+      <label style="margin:0">How many records?</label>
+      <input type="number" id="count" value="5" min="1" max="1000">
+      <button class="btn btn-primary" onclick="generate()">Generate</button>
+    </div>
+
+    <div class="btn-group" style="margin-bottom:10px">
+      <button class="btn btn-sm btn-secondary" onclick="copyOutput()">📋 Copy</button>
+      <button class="btn btn-sm btn-secondary" onclick="downloadJSON()">⬇ JSON</button>
+      <button class="btn btn-sm btn-secondary" onclick="downloadCSV()">⬇ CSV</button>
+    </div>
+
+    <label>Generated Data</label>
+    <div id="result-area">Click "Generate" to create mock data...</div>
+
+    <div class="mt-16">
+      <h3 class="cat-title">FAQ</h3>
+      <details style="margin:8px 0;padding:8px 12px;background:var(--bg-card);border-radius:6px"><summary style="cursor:pointer;font-weight:600;font-size:0.88rem">What is a mock data generator?</summary><p style="font-size:0.82rem;color:#999;margin-top:6px">A mock data generator creates realistic but fake data for software testing and development. It helps you populate databases, test APIs, and prototype UIs without using real user information.</p></details>
+      <details style="margin:8px 0;padding:8px 12px;background:var(--bg-card);border-radius:6px"><summary style="cursor:pointer;font-weight:600;font-size:0.88rem">Is the generated data real?</summary><p style="font-size:0.82rem;color:#999;margin-top:6px">No. All data is randomly generated from preset name lists, company names, and address patterns. None of it corresponds to real people or businesses.</p></details>
+      <details style="margin:8px 0;padding:8px 12px;background:var(--bg-card);border-radius:6px"><summary style="cursor:pointer;font-weight:600;font-size:0.88rem">Can I use this for production databases?</summary><p style="font-size:0.82rem;color:#999;margin-top:6px">Yes — it's great for seeding development and staging databases. Since data is fake, there are no privacy concerns.</p></details>
+      <details style="margin:8px 0;padding:8px 12px;background:var(--bg-card);border-radius:6px"><summary style="cursor:pointer;font-weight:600;font-size:0.88rem">What output formats are supported?</summary><p style="font-size:0.82rem;color:#999;margin-top:6px">JSON (array of objects), CSV (with headers), and plain text. For API responses, it generates the full response envelope with status codes.</p></details>
+      <details style="margin:8px 0;padding:8px 12px;background:var(--bg-card);border-radius:6px"><summary style="cursor:pointer;font-weight:600;font-size:0.88rem">How many records can I generate?</summary><p style="font-size:0.82rem;color:#999;margin-top:6px">Up to 1,000 records per generation. For larger datasets, generate multiple batches.</p></details>
+      <details style="margin:8px 0;padding:8px 12px;background:var(--bg-card);border-radius:6px"><summary style="cursor:pointer;font-weight:600;font-size:0.88rem">Where is my data processed?</summary><p style="font-size:0.82rem;color:#999;margin-top:6px">Everything runs in your browser. No data is sent to any server — we never see what you generate.</p></details>
+      <details style="margin:8px 0;padding:8px 12px;background:var(--bg-card);border-radius:6px"><summary style="cursor:pointer;font-weight:600;font-size:0.88rem">Is this tool free?</summary><p style="font-size:0.82rem;color:#999;margin-top:6px">Yes, completely free. No signup, no limits.</p></details>
+      <details style="margin:8px 0;padding:8px 12px;background:var(--bg-card);border-radius:6px"><summary style="cursor:pointer;font-weight:600;font-size:0.88rem">Can I contribute more data templates?</summary><p style="font-size:0.82rem;color:#999;margin-top:6px">Yes! The project is open source at github.com/Linanxi12/devbox-tools. Contributions welcome.</p></details>
+    </div>
+
+    <div class="related-tools">
+      <h4>Related Tools</h4>
+      <a href="json-formatter.html">JSON Formatter</a><a href="csv-json.html">CSV ↔ JSON</a>
+      <a href="uuid-generator.html">UUID Generator</a><a href="password-generator.html">Password Generator</a>
+    </div>
+  </div></main>
+  <div class="share-bar"><span class="share-label">Share:</span><a href="#" class="share-link" onclick="navigator.clipboard.writeText(window.location.href);this.textContent='Copied!';setTimeout(()=>this.textContent='Copy Link',1500);return false">Copy Link</a><a href="#" class="share-link" onclick="window.open('https://x.com/intent/tweet?url='+encodeURIComponent(window.location.href)+'&text='+encodeURIComponent(document.title),'_blank','width=600,height=400');return false">X / Twitter</a><a href="#" class="share-link" onclick="window.open('https://www.linkedin.com/sharing/share-offsite/?url='+encodeURIComponent(window.location.href),'_blank','width=600,height=400');return false">LinkedIn</a></div>
+  <footer class="footer"><div class="container"><p>QuickDev — All tools run locally in your browser.</p></div></footer>
+  <div id="toast" class="toast"></div>
+
+  <script>
+    let dataType='user'; let lastResult=[];
+
+    const FIRST_NAMES=['James','Emma','Liam','Olivia','Noah','Ava','Ethan','Sophia','Mason','Isabella','Lucas','Mia','Oliver','Charlotte','Aiden','Amelia','Elijah','Harper','William','Evelyn','Benjamin','Abigail','Henry','Emily','Alexander'];
+    const LAST_NAMES=['Smith','Johnson','Williams','Brown','Jones','Garcia','Miller','Davis','Rodriguez','Martinez','Anderson','Taylor','Thomas','Moore','Jackson','Martin','Lee','Thompson','White','Harris','Clark','Lewis','Walker','Hall','Allen'];
+    const DOMAINS=['gmail.com','yahoo.com','outlook.com','hotmail.com','proton.me','company.com','example.org','dev.io'];
+    const COUNTRIES=['United States','Canada','United Kingdom','Australia','Germany','France','Japan','Brazil','India','Netherlands'];
+    const CITIES=['New York','Los Angeles','Chicago','Toronto','London','Sydney','Berlin','Paris','Tokyo','Mumbai','Amsterdam','San Francisco','Seattle','Austin','Boston'];
+    const STREETS=['Main St','Oak Ave','Elm St','Maple Dr','Park Blvd','Cedar Ln','Pine Rd','Birch Ct','Lake View','Hill Crest','Sunset Blvd','Broadway','Market St','River Rd'];
+    const INDUSTRIES=['Technology','Healthcare','Finance','Education','Retail','Manufacturing','Marketing','Real Estate','Energy','Entertainment'];
+    const COMPANIES=['Acme Corp','Globex','Initech','Umbrella Inc','Stark Industries','Wayne Enterprises','Cyberdyne','Oscorp','Wonka Ltd','Massive Dynamic'];
+
+    function selectType(t){ dataType=t; document.querySelectorAll('.type-btn').forEach(b=>b.classList.remove('active')); event.target.classList.add('active'); generate(); }
+
+    function rand(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+    function randInt(min,max){ return Math.floor(Math.random()*(max-min+1))+min; }
+    function genEmail(f,l){ return (f+'.'+l+'@'+rand(DOMAINS)).toLowerCase(); }
+    function genPhone(){ return '+1 ('+randInt(200,999)+') '+randInt(200,999)+'-'+randInt(1000,9999); }
+    function genZip(){ return String(randInt(10000,99999)); }
+
+    function generate(){
+      var n=parseInt(document.getElementById('count').value)||5; n=Math.min(Math.max(n,1),1000); lastResult=[];
+      if(dataType==='user'){
+        for(var i=0;i<n;i++){ var fn=rand(FIRST_NAMES),ln=rand(LAST_NAMES); lastResult.push({firstName:fn,lastName:ln,fullName:fn+' '+ln,email:genEmail(fn,ln),username:(fn+ln+randInt(1,999)).toLowerCase(),phone:genPhone()}); }
+      } else if(dataType==='address'){
+        for(var i=0;i<n;i++){ lastResult.push({country:rand(COUNTRIES),city:rand(CITIES),street:randInt(100,9999)+' '+rand(STREETS),zipCode:genZip()}); }
+      } else if(dataType==='company'){
+        for(var i=0;i<n;i++){ var cn=rand(COMPANIES); lastResult.push({companyName:cn,website:'https://www.'+cn.toLowerCase().replace(/\s/g,'')+'.com',industry:rand(INDUSTRIES),employees:randInt(5,5000),founded:randInt(1990,2025)}); }
+      } else if(dataType==='api'){
+        for(var i=0;i<n;i++){ lastResult.push({id:i+1,type:rand(['order','subscription','invoice']),status:rand(['active','pending','completed']),amount:parseFloat((Math.random()*990+10).toFixed(2)),currency:'USD',createdAt:new Date(Date.now()-randInt(0,86400000*365)).toISOString()}); }
+      }
+      document.getElementById('result-area').textContent=JSON.stringify(lastResult,null,2);
+    }
+
+    function copyOutput(){ var t=document.getElementById('result-area').textContent; if(t){ navigator.clipboard.writeText(t); showToast('Copied!'); } }
+    function downloadJSON(){ var blob=new Blob([JSON.stringify(lastResult,null,2)],{type:'application/json'}); var a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='mock-data.json'; a.click(); }
+    function downloadCSV(){
+      if(!lastResult.length) return;
+      var headers=Object.keys(lastResult[0]);
+      var csv=headers.join(',')+'\n'+lastResult.map(r=>headers.map(h=>{ var v=r[h]; return typeof v==='string'&&(v.includes(',')||v.includes('"'))?'"'+v.replace(/"/g,'""')+'"':String(v); }).join(',')).join('\n');
+      var blob=new Blob([csv],{type:'text/csv'}); var a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='mock-data.csv'; a.click();
+    }
+    function showToast(msg){ var t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),1500); }
+
+    generate();
+  </script>
+</body>
+</html>
