@@ -85,7 +85,7 @@
     <div id="drop-zone" onclick="document.getElementById('file-input').click()">
       <div class="icon">📸</div>
       <strong>Click to upload or drag & drop an image here</strong>
-      <div class="hint">JPEG, PNG, HEIC, TIFF, WebP — any photo format. Your image never leaves your device.</div>
+      <div class="hint">JPEG, PNG, WebP fully supported. HEIC/TIFF preview depends on your browser — HEIC clean copies are converted to JPEG. Your image never leaves your device.</div>
     </div>
     <input type="file" id="file-input" accept="image/*" style="display:none" onchange="handleFile(this.files[0])">
 
@@ -104,6 +104,8 @@
       <button class="btn btn-primary" onclick="removeExif()">🔒 Download Clean Copy (No Metadata)</button>
       <button class="btn btn-secondary" onclick="resetAll()">Clear & Try Another</button>
     </div>
+
+    <div class="text-xs" style="color:#888;margin-top:6px">How the clean copy works: it's re-encoded in your browser. PNG stays PNG (lossless); JPEG, WebP and HEIC become JPEG at 95% quality — all metadata removed, with a slight quality loss.</div>
 
     <div class="related-tools">
       <h4>Related Tools</h4>
@@ -230,18 +232,24 @@
         canvas.width = img.naturalWidth;
         canvas.height = img.naturalHeight;
         const ctx = canvas.getContext('2d');
-        // Preserve orientation
         ctx.drawImage(img, 0, 0);
+        // PNG input stays lossless PNG; everything else is re-encoded as JPEG.
+        const isPng = currentFile.type === 'image/png';
+        const mime = isPng ? 'image/png' : 'image/jpeg';
+        const ext = isPng ? '.png' : '.jpg';
         canvas.toBlob(blob => {
+          if (!blob) { showToast('Sorry, your browser could not process this image.'); return; }
           const url = URL.createObjectURL(blob);
           const a = document.createElement('a');
           a.href = url;
-          const name = currentFile.name.replace(/(\.[^.]+)$/, '_clean$1');
-          a.download = name;
+          a.download = currentFile.name.replace(/\.[^.]+$/, '') + '_clean' + ext;
           a.click();
           URL.revokeObjectURL(url);
           showToast('Clean copy downloaded! 📥');
-        }, 'image/jpeg', 0.95);
+        }, mime, 0.95);
+      };
+      img.onerror = () => {
+        showToast('Your browser can’t display this format (e.g. HEIC). Metadata viewing still works.');
       };
       img.src = previewImg.src;
     }
